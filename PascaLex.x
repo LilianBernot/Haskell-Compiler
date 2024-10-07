@@ -11,6 +11,7 @@ tokens :-
   <0> 0 {\p _ -> TK p (INT 0)}
   <0> print {\p _ -> TK p PRINT}
   <0> \+ {\p _ -> TK p PLUS}
+  <0> \- {\p _ -> TK p SUB}
 
 {
 data Token = TK AlexPosn TokenName deriving (Eq,Show)
@@ -20,6 +21,7 @@ data TokenName
   | PRINT
   | SEP
   | PLUS
+  | SUB
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens

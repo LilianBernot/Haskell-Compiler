@@ -16,6 +16,7 @@ import PascaLex
   ';' {TK _ SEP}
   integer {TK _ (INT $$)}
   plus {TK _ PLUS}
+  sub {TK _ SUB}
 
 
 %%
@@ -31,7 +32,8 @@ Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
 Expr : integer {"\tPUSH\t" ++ (show $1) ++ "\n"}
   | Expr plus Expr  { $1 ++ $3 ++ "\tADD\n" } 
-  
+  | Expr sub Expr  { $1 ++ $3 ++ "\tSUB\n" } 
+
 {
 
 {-
