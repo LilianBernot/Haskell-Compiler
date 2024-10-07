@@ -17,6 +17,14 @@ import PascaLex
   integer {TK _ (INT $$)}
   plus {TK _ PLUS}
   sub {TK _ SUB}
+  mul {TK _ MUL}
+  div {TK _ DIV}
+  lpar {TK _ LPAR}
+  rpar {TK _ RPAR}
+  cos {TK _ COS}
+  sin {TK _ SIN}
+  sqrt {TK _ SQRT}
+  power {TK _ POWER}
 
 
 %%
@@ -30,9 +38,17 @@ Inst : Print ';' {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
-Expr : integer {"\tPUSH\t" ++ (show $1) ++ "\n"}
+Expr : Term  { $1 } 
   | Expr plus Expr  { $1 ++ $3 ++ "\tADD\n" } 
   | Expr sub Expr  { $1 ++ $3 ++ "\tSUB\n" } 
+
+Term : Factor  { $1 } 
+  | Term mul Factor  { $1 ++ $3 ++ "\tMUL\n" } 
+  | Term div Factor  { $1 ++ $3 ++ "\tDIV\n" } 
+
+Factor : integer {"\tPUSH\t" ++ (show $1) ++ "\n"}
+  | lpar Expr rpar  { $2 }
+  -- TODO : implement negative numbers
 
 {
 

@@ -12,6 +12,11 @@ tokens :-
   <0> print {\p _ -> TK p PRINT}
   <0> \+ {\p _ -> TK p PLUS}
   <0> \- {\p _ -> TK p SUB}
+  <0>  \*\* {\p _ -> TK p POWER}
+  <0> \* {\p _ -> TK p MUL}
+  <0> \/ {\p _ -> TK p DIV}
+  <0> \( {\p _ -> TK p LPAR}
+  <0> \) {\p _ -> TK p RPAR}
 
 {
 data Token = TK AlexPosn TokenName deriving (Eq,Show)
@@ -22,6 +27,14 @@ data TokenName
   | SEP
   | PLUS
   | SUB
+  | MUL
+  | DIV
+  | LPAR
+  | RPAR
+  | COS
+  | SQRT
+  | SIN 
+  | POWER
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens

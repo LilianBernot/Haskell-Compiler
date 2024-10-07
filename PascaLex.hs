@@ -605,75 +605,80 @@ alex_gscan stop__ p c bs inp__ (sc,state__) =
 alex_tab_size :: Int
 alex_tab_size = 8
 alex_base :: Data.Array.Array Int Int
-alex_base = Data.Array.listArray (0 :: Int, 11)
+alex_base = Data.Array.listArray (0 :: Int, 16)
   [ -8
-  , -104
   , 0
   , 0
-  , -41
-  , 0
-  , 18
-  , -97
+  , -36
   , 0
   , 0
-  , -98
-  , -86
+  , 0
+  , -107
+  , -1
+  , 0
+  , -35
+  , 0
+  , 0
+  , -93
+  , -85
+  , -79
+  , 0
   ]
 
 alex_table :: Data.Array.Array Int Int
-alex_table = Data.Array.listArray (0 :: Int, 273)
+alex_table = Data.Array.listArray (0 :: Int, 254)
   [ 0
-  , 6
-  , 6
-  , 6
-  , 6
-  , 6
-  , 10
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 11
+  , 8
+  , 8
+  , 8
+  , 8
+  , 8
   , 2
-  , 1
+  , 15
+  , 8
+  , 8
+  , 8
+  , 8
+  , 8
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 12
+  , 8
+  , 13
+  , 14
   , 0
   , 0
   , 0
-  , 0
-  , 6
-  , 0
-  , 0
-  , 6
-  , 6
-  , 6
-  , 6
-  , 6
-  , 0
-  , 0
-  , 0
-  , 9
   , 0
   , 8
-  , 0
-  , 0
-  , 3
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 4
-  , 6
   , 5
+  , 6
+  , 3
+  , 16
+  , 0
+  , 1
+  , 0
+  , 4
+  , 11
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 10
+  , 0
+  , 9
   , 0
   , 0
   , 0
@@ -877,36 +882,23 @@ alex_table = Data.Array.listArray (0 :: Int, 273)
   , 0
   , 0
   , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
   ]
 
 alex_check :: Data.Array.Array Int Int
-alex_check = Data.Array.listArray (0 :: Int, 273)
+alex_check = Data.Array.listArray (0 :: Int, 254)
   [ -1
   , 9
   , 10
   , 11
   , 12
   , 13
-  , 110
+  , 42
+  , 114
+  , 9
+  , 10
+  , 11
+  , 12
+  , 13
   , 48
   , 49
   , 50
@@ -917,29 +909,23 @@ alex_check = Data.Array.listArray (0 :: Int, 273)
   , 55
   , 56
   , 57
-  , 114
   , 116
+  , 32
+  , 110
   , 105
   , -1
   , -1
   , -1
   , -1
   , 32
-  , -1
-  , -1
-  , 9
-  , 10
-  , 11
-  , 12
-  , 13
-  , -1
-  , -1
-  , -1
+  , 40
+  , 41
+  , 42
   , 43
   , -1
   , 45
   , -1
-  , -1
+  , 47
   , 48
   , 49
   , 50
@@ -950,7 +936,7 @@ alex_check = Data.Array.listArray (0 :: Int, 273)
   , 55
   , 56
   , 57
-  , 32
+  , -1
   , 59
   , -1
   , -1
@@ -1155,29 +1141,10 @@ alex_check = Data.Array.listArray (0 :: Int, 273)
   , -1
   , -1
   , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
-  , -1
   ]
 
 alex_deflt :: Data.Array.Array Int Int
-alex_deflt = Data.Array.listArray (0 :: Int, 11)
+alex_deflt = Data.Array.listArray (0 :: Int, 16)
   [ -1
   , -1
   , -1
@@ -1190,29 +1157,44 @@ alex_deflt = Data.Array.listArray (0 :: Int, 11)
   , -1
   , -1
   , -1
+  , -1
+  , -1
+  , -1
+  , -1
+  , -1
   ]
 
-alex_accept = Data.Array.listArray (0 :: Int, 11)
+alex_accept = Data.Array.listArray (0 :: Int, 16)
   [ AlexAccNone
-  , AlexAccNone
+  , AlexAcc 10
+  , AlexAcc 9
+  , AlexAcc 8
+  , AlexAcc 7
+  , AlexAcc 6
   , AlexAcc 5
+  , AlexAccNone
+  , AlexAccSkip
   , AlexAcc 4
   , AlexAcc 3
   , AlexAcc 2
-  , AlexAccSkip
-  , AlexAccNone
   , AlexAcc 1
+  , AlexAccNone
+  , AlexAccNone
+  , AlexAccNone
   , AlexAcc 0
-  , AlexAccNone
-  , AlexAccNone
   ]
 
-alex_actions = Data.Array.array (0 :: Int, 6)
-  [ (5,alex_action_4)
-  , (4,alex_action_3)
+alex_actions = Data.Array.array (0 :: Int, 11)
+  [ (10,alex_action_6)
+  , (9,alex_action_7)
+  , (8,alex_action_8)
+  , (7,alex_action_9)
+  , (6,alex_action_10)
+  , (5,alex_action_11)
+  , (4,alex_action_1)
   , (3,alex_action_2)
-  , (2,alex_action_1)
-  , (1,alex_action_6)
+  , (2,alex_action_3)
+  , (1,alex_action_4)
   , (0,alex_action_5)
   ]
 
@@ -1222,6 +1204,11 @@ alex_action_3 = \p _ -> TK p (INT 0)
 alex_action_4 = \p _ -> TK p PRINT
 alex_action_5 = \p _ -> TK p PLUS
 alex_action_6 = \p _ -> TK p SUB
+alex_action_7 = \p _ -> TK p POWER
+alex_action_8 = \p _ -> TK p MUL
+alex_action_9 = \p _ -> TK p DIV
+alex_action_10 = \p _ -> TK p LPAR
+alex_action_11 = \p _ -> TK p RPAR
 
 #define ALEX_NOPRED 1
 -- -----------------------------------------------------------------------------
@@ -1455,7 +1442,7 @@ alexRightContext IBOX(sc) user__ _ _ input__ =
         -- match when checking the right context, just
         -- the first match will do.
 #endif
-{-# LINE 16 "PascaLex.x" #-}
+{-# LINE 21 "PascaLex.x" #-}
 data Token = TK AlexPosn TokenName deriving (Eq,Show)
 
 data TokenName
@@ -1464,6 +1451,14 @@ data TokenName
   | SEP
   | PLUS
   | SUB
+  | MUL
+  | DIV
+  | LPAR
+  | RPAR
+  | COS
+  | SQRT
+  | SIN 
+  | POWER
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens
