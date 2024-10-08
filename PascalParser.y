@@ -57,6 +57,7 @@ Term : Factor  { $1 }
 
 Factor : integer {"\tPUSH\t" ++ (show $1) ++ "\n"}
   | lpar Expr rpar  { $2 }
+  | varname { "\tPUSH\t" ++ $1 ++ "\n" ++ "\tLOAD\n" }
 
 {
 

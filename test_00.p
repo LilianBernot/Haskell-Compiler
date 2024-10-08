@@ -9,3 +9,5 @@ print -4;
 var var0;
 var0 = 890;
 var var1 = 99;
+print var1;
+print 2*(var1 + 3) - var0;
