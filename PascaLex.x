@@ -19,6 +19,10 @@ tokens :-
   <0> \) {\p _ -> TK p RPAR}
   <0> \-\-.* ; -- we skip the comments
   -- TODO : skip comments zones
+  <0> var {\p _ -> TK p VAR}
+  <0> \= {\p _ -> TK p ASSIGN}
+  <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
+
 {
 data Token = TK AlexPosn TokenName deriving (Eq,Show)
 
@@ -36,6 +40,9 @@ data TokenName
   | SQRT
   | SIN 
   | POWER
+  | VAR
+  | VARNAME String
+  | ASSIGN
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens

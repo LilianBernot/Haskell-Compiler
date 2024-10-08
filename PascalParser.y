@@ -25,6 +25,9 @@ import PascaLex
   sin {TK _ SIN}
   sqrt {TK _ SQRT}
   power {TK _ POWER}
+  var {TK _ VAR}
+  varname {TK _ (VARNAME $$)}
+  assign {TK _ ASSIGN}
 
 
 %%
@@ -35,11 +38,16 @@ Linst : Inst {$1}
 
 Inst : Print ';' {$1}
   | ';' { "" }
+  | VariableDeclaration {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
+VariableDeclaration : var varname {declareVariable $2}
+  | varname assign Expr {affectVariableValue $1 $3}
+  | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
+
 Expr : Term  { $1 } 
-  | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- TODO : negative numbers
+  | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers
   | Expr plus Expr  { $1 ++ $3 ++ "\tADD\n" } 
   | Expr sub Expr  { $1 ++ $3 ++ "\tSUB\n" } 
 
@@ -66,6 +74,12 @@ parseProgram = parse . scanTokens
 parseError :: [Token] -> ParseResult a
 parseError [] = error "Parse error at the end of input"
 parseError (h:_) = error $ "Parse error at line " ++ show (getTLine h) ++ ", column " ++ show (getTCol h) ++ ", on token " ++ show h
+
+declareVariable :: String -> String
+declareVariable name = name ++"\tDS\t1\n"
+
+affectVariableValue :: String -> String -> String
+affectVariableValue name value = "\tPUSH\t" ++ name ++"\n" ++ value ++ "\tSTORE\n"
 }
 
 

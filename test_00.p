@@ -6,4 +6,6 @@ print 3 + 5;
 print 3 - 5;
 print 2*(3+6) - 98;
 print -4;
--- comment
+var var0;
+var0 = 890;
+var var1 = 99;
