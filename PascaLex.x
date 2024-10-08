@@ -17,7 +17,8 @@ tokens :-
   <0> \/ {\p _ -> TK p DIV}
   <0> \( {\p _ -> TK p LPAR}
   <0> \) {\p _ -> TK p RPAR}
-
+  <0> \-\-.* ; -- we skip the comments
+  -- TODO : skip comments zones
 {
 data Token = TK AlexPosn TokenName deriving (Eq,Show)
 
