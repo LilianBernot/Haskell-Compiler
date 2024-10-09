@@ -65,8 +65,8 @@ Inst : Print ';' {$1}
   | IfStatement {$1}
   | WhileStatement {$1}
 
-Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
-  | print varname lsb Expr rsb {";/ print...\n" ++ getArrayElementFromIndex $2 $4 ++ "\tLOAD\n" ++ "\tOUT\n"}
+Print : print Expr {";/ print...\n" ++ $2 ++ out}
+  | print varname lsb Expr rsb {";/ print...\n" ++ getArrayElementFromIndex $2 $4 ++ load ++ out}
 
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
@@ -111,7 +111,7 @@ Term : Factor  { $1 }
 
 Factor : integer { push (show $1)}
   | lpar Expr rpar  { $2 }
-  | varname { push $1 ++ "\tLOAD\n" }
+  | varname { push $1 ++ load }
 
 {
 
@@ -141,6 +141,8 @@ multiply = "\tMUL\n"
 goto = "\tGOTO\n"
 equ = "\tEQU\t*\n"
 store = "\tSTORE\n"
+out = "\tOUT\n"
+load = "\tLOAD\n"
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"

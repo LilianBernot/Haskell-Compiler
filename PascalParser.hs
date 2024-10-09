@@ -173,7 +173,7 @@ happyReduce_7 = happySpecReduce_2  2# happyReduction_7
 happyReduction_7 (HappyTerminal (TK _ (VARNAME happy_var_2)))
         _
          =  HappyAbsSyn6
-                 (push happy_var_2 ++ "\tIN\n" ++ "\tSTORE\n"
+                 (push happy_var_2 ++ "\tIN\n" ++ store
         )
 happyReduction_7 _ _  = notHappyAtAll 
 
@@ -201,7 +201,7 @@ happyReduce_10 = happySpecReduce_2  3# happyReduction_10
 happyReduction_10 (HappyAbsSyn13  happy_var_2)
         _
          =  HappyAbsSyn7
-                 (";/ print...\n" ++ happy_var_2 ++ "\tOUT\n"
+                 (";/ print...\n" ++ happy_var_2 ++ out
         )
 happyReduction_10 _ _  = notHappyAtAll 
 
@@ -215,7 +215,7 @@ happyReduction_11 (_ `HappyStk`
         _ `HappyStk`
         happyRest)
          = HappyAbsSyn7
-                 (";/ print...\n" ++ getArrayElementFromIndex happy_var_2 happy_var_4 ++ "\tLOAD\n" ++ "\tOUT\n"
+                 (";/ print...\n" ++ getArrayElementFromIndex happy_var_2 happy_var_4 ++ load ++ out
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -230,7 +230,7 @@ happyReduction_12 (_ `HappyStk`
          = HappyAbsSyn8
                  (let labelStartWhile = "labelStartWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ happy_var_2 ++ bez labelEndWhile ++ happy_var_4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+  ";/ While Loop\n" ++ labelStartWhile ++ equ ++ happy_var_2 ++ bez labelEndWhile ++ happy_var_4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -249,7 +249,7 @@ happyReduction_13 (_ `HappyStk`
          = HappyAbsSyn9
                  (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
     let labelElse = "labelElse" ++ show(getTLine happy_var_6) ++ "Col" ++ show(getTCol happy_var_6) in
-    ";/ If Then Else Condition\n" ++ happy_var_2 ++ bez labelElse ++ happy_var_4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
+    ";/ If Then Else Condition\n" ++ happy_var_2 ++ bez labelElse ++ happy_var_4 ++ push labelIf ++ goto ++ labelElse ++ equ ++ happy_var_8 ++ labelIf ++ equ
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -263,7 +263,7 @@ happyReduction_14 (_ `HappyStk`
         happyRest)
          = HappyAbsSyn9
                  (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
-      ";/ If Then Condition\n" ++ happy_var_2 ++ bez labelIf ++ happy_var_4 ++ labelIf ++ "\tEQU\t*\n"
+      ";/ If Then Condition\n" ++ happy_var_2 ++ bez labelIf ++ happy_var_4 ++ labelIf ++ equ
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -321,7 +321,7 @@ happyReduction_19 ((HappyAbsSyn13  happy_var_6) `HappyStk`
         (HappyTerminal (TK _ (VARNAME happy_var_1))) `HappyStk`
         happyRest)
          = HappyAbsSyn10
-                 (getArrayElementFromIndex happy_var_1 happy_var_3 ++ happy_var_6 ++ "\tSTORE\n"
+                 (getArrayElementFromIndex happy_var_1 happy_var_3 ++ happy_var_6 ++ store
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -477,7 +477,7 @@ happyReduction_34 _ _ _  = notHappyAtAll
 happyReduce_35 = happySpecReduce_1  11# happyReduction_35
 happyReduction_35 (HappyTerminal (TK _ (VARNAME happy_var_1)))
          =  HappyAbsSyn15
-                 (push happy_var_1 ++ "\tLOAD\n"
+                 (push happy_var_1 ++ load
         )
 happyReduction_35 _  = notHappyAtAll 
 
@@ -583,12 +583,17 @@ add = "\tADD\n"
 substract = "\tSUB\n"
 divide = "\tDIV\n"
 multiply = "\tMUL\n"
+goto = "\tGOTO\n"
+equ = "\tEQU\t*\n"
+store = "\tSTORE\n"
+out = "\tOUT\n"
+load = "\tLOAD\n"
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
 
 affectVariableValue :: String -> String -> String
-affectVariableValue name value = push name ++ value ++ "\tSTORE\n"
+affectVariableValue name value = push name ++ value ++ store
 
 getArrayElementFromIndex :: String -> String -> String
 getArrayElementFromIndex array_name index = push array_name ++ index ++ add
