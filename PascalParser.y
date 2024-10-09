@@ -19,6 +19,7 @@ import PascaLex
   sub {TK _ SUB}
   mul {TK _ MUL}
   div {TK _ DIV}
+  mod {TK _ MOD}
   lpar {TK _ LPAR}
   rpar {TK _ RPAR}
   cos {TK _ COS}
@@ -69,6 +70,7 @@ Expr : Term  { $1 }
   | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers
   | Expr plus Expr  { $1 ++ $3 ++ "\tADD\n" } 
   | Expr sub Expr  { $1 ++ $3 ++ "\tSUB\n" } 
+  | Expr mod Expr { $1 ++ $1 ++ $3 ++ "\tDIV\n" ++ $3 ++ "\tMUL\n" ++ "\tSUB\n" }
 
 Term : Factor  { $1 } 
   | Term mul Factor  { $1 ++ $3 ++ "\tMUL\n" } 
