@@ -31,8 +31,8 @@ import PascaLex
   input {TK _ IN}
   if {TK _ IF}
   else {TK _ ELSE}
-  left_curly_bracket {TK _ LEFTCURLYBRACKET}
-  right_curly_bracket {TK _ RIGHTCURLYBRACKET}
+  lcb {TK _ LEFTCURLYBRACKET}
+  rcb {TK _ RIGHTCURLYBRACKET}
   
 
 %%
@@ -50,8 +50,16 @@ Inst : Print ';' {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
-IfStatement : if Expr left_curly_bracket Linst right_curly_bracket else left_curly_bracket Linst right_curly_bracket { ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\tlabelElse\n" ++ $4 ++ "\tPUSH\tlabelFin\n" ++ "\tGOTO\n" ++ "labelElse\tEQU\t*\n" ++ $8 ++ "labelFin\tEQU\t*\n" }
-  | if Expr left_curly_bracket Linst right_curly_bracket { ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
+IfStatement : 
+  if Expr lcb Linst rcb else lcb Linst rcb { 
+    let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
+    let labelElse = "labelElse" ++ show(getTLine $6) ++ "Col" ++ show(getTCol $6) in
+    ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ $4 ++ "\tPUSH\t" ++ labelIf ++ "\n" ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ $8 ++ labelIf ++ "\tEQU\t*\n" 
+  }
+  | if Expr lcb Linst rcb { 
+      let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
+      ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\t" ++ labelIf ++ "\n" ++ $4 ++ labelIf ++ "\tEQU\t*\n" 
+    }
 
 VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}

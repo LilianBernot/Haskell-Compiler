@@ -40,7 +40,7 @@ happyExpList = HappyA# "\x00\x30\x00\x36\x00\xc0\x00\xd8\x00\x00\x03\x60\x03\x00
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_parse","Program","Linst","Inst","Print","IfStatement","VariableDeclaration","Expr","Term","Factor","print","';'","integer","plus","sub","mul","div","lpar","rpar","cos","sin","sqrt","power","var","varname","assign","input","if","else","left_curly_bracket","right_curly_bracket","%eof"]
+  where token_strs = ["error","%dummy","%start_parse","Program","Linst","Inst","Print","IfStatement","VariableDeclaration","Expr","Term","Factor","print","';'","integer","plus","sub","mul","div","lpar","rpar","cos","sin","sqrt","power","var","varname","assign","input","if","else","lcb","rcb","%eof"]
         bit_start = st               Prelude.* 34
         bit_end   = (st Prelude.+ 1) Prelude.* 34
         read_bit = readArrayBit happyExpList
@@ -188,15 +188,17 @@ happyReduce_10 = happyReduce 9# 4# happyReduction_10
 happyReduction_10 (_ `HappyStk`
         (HappyAbsSyn5  happy_var_8) `HappyStk`
         _ `HappyStk`
-        _ `HappyStk`
+        (HappyTerminal happy_var_6) `HappyStk`
         _ `HappyStk`
         (HappyAbsSyn5  happy_var_4) `HappyStk`
         _ `HappyStk`
         (HappyAbsSyn10  happy_var_2) `HappyStk`
-        _ `HappyStk`
+        (HappyTerminal happy_var_1) `HappyStk`
         happyRest)
          = HappyAbsSyn8
-                 (";/ If Then Condition\n" ++ happy_var_2 ++ "\tBEZ\tlabelElse\n" ++ happy_var_4 ++ "\tPUSH\tlabelFin\n" ++ "\tGOTO\n" ++ "labelElse\tEQU\t*\n" ++ happy_var_8 ++ "labelFin\tEQU\t*\n"
+                 (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
+    let labelElse = "labelElse" ++ show(getTLine happy_var_6) ++ "Col" ++ show(getTCol happy_var_6) in
+    ";/ If Then Else Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ happy_var_4 ++ "\tPUSH\t" ++ labelIf ++ "\n" ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -206,10 +208,11 @@ happyReduction_11 (_ `HappyStk`
         (HappyAbsSyn5  happy_var_4) `HappyStk`
         _ `HappyStk`
         (HappyAbsSyn10  happy_var_2) `HappyStk`
-        _ `HappyStk`
+        (HappyTerminal happy_var_1) `HappyStk`
         happyRest)
          = HappyAbsSyn8
-                 (";/ If Then Condition\n" ++ happy_var_2 ++ "\tBEZ\tlabelFin\n" ++ happy_var_4 ++ "labelFin\tEQU\t*\n"
+                 (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
+      ";/ If Then Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelIf ++ "\n" ++ happy_var_4 ++ labelIf ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
