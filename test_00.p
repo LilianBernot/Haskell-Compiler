@@ -50,5 +50,6 @@ if (2 + 2) {
 -- }
 -- print a;
 
-array array0 5;
-array0[0] = 2;
+array arr 5;
+arr[2] = 17;
+print arr[1+1];

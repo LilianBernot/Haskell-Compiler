@@ -54,6 +54,7 @@ Inst : Print ';' {$1}
   | WhileStatement {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
+  | print varname lsb Expr rsb {";/ print...\n" ++ getArrayElementFromIndex $2 $4 ++ "\tLOAD\n" ++ "\tOUT\n"}
 
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
@@ -76,7 +77,7 @@ VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}
   | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
   | array varname integer {$2 ++"\tDS\t" ++ (show $3) ++ "\n"}
-  | varname lsb Expr rsb assign Expr {"\tPUSH\t" ++ $1 ++"\n" ++ $3 ++ "\tADD\n" ++ $6 ++ "\tSTORE\n"}
+  | varname lsb Expr rsb assign Expr {getArrayElementFromIndex $1 $3 ++ $6 ++ "\tSTORE\n"}
 
 Expr : Term  { $1 } 
   | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers
@@ -114,6 +115,9 @@ declareVariable name = name ++"\tDS\t1\n"
 
 affectVariableValue :: String -> String -> String
 affectVariableValue name value = "\tPUSH\t" ++ name ++"\n" ++ value ++ "\tSTORE\n"
+
+getArrayElementFromIndex :: String -> String -> String
+getArrayElementFromIndex array_name index = "\tPUSH\t" ++ array_name ++"\n" ++ index ++ "\tADD\n"
 }
 
 
