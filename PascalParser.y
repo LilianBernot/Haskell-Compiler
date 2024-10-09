@@ -71,18 +71,18 @@ Print : print Expr {";/ print...\n" ++ $2 ++ out}
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ equ ++ $2 ++ bez labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
+  ";/ While Loop\n" ++ labelStartWhile ++ equ ++ $2 ++ bgz labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
 }
 
 IfStatement : 
   if Expr lcb Linst rcb else lcb Linst rcb { 
     let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
     let labelElse = "labelElse" ++ show(getTLine $6) ++ "Col" ++ show(getTCol $6) in
-    ";/ If Then Else Condition\n" ++ $2 ++ bez labelElse ++ $4 ++ push labelIf ++ goto ++ labelElse ++ equ ++ $8 ++ labelIf ++ equ 
+    ";/ If Then Else Condition\n" ++ $2 ++ bgz labelElse ++ $4 ++ push labelIf ++ goto ++ labelElse ++ equ ++ $8 ++ labelIf ++ equ 
   }
   | if Expr lcb Linst rcb { 
       let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-      ";/ If Then Condition\n" ++ $2 ++ bez labelIf ++ $4 ++ labelIf ++ equ 
+      ";/ If Then Condition\n" ++ $2 ++ bgz labelIf ++ $4 ++ labelIf ++ equ 
     }
 
 VariableDeclaration : var VariableNames {$2}
@@ -98,8 +98,12 @@ VariableNames : varname {declareVariable $1}
 Boolean : false { push "1"}
   | true { push "0" }
 
+Comparison : Expr superior Expr { $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
+  | Expr inferior Expr { $1 ++ $3 ++ substract }
+
 Expr : Term  { $1 } 
   | Boolean { $1 }
+  | Comparison { $1 }
   | sub Expr { push "0" ++ $2 ++ substract  } -- negative numbers
   | Expr plus Expr  { $1 ++ $3 ++ add } 
   | Expr sub Expr  { $1 ++ $3 ++ substract } 
@@ -155,6 +159,9 @@ getArrayElementFromIndex array_name index = push array_name ++ index ++ add
 
 bez :: String -> String
 bez label = "\tBEZ\t" ++ label ++ "\n"
+
+bgz :: String -> String
+bgz label = "\tBGZ\t" ++ label ++ "\n"
 }
 
 

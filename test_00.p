@@ -58,3 +58,15 @@ var a, b, c;
 
 print false;
 print true;
+
+if (2 > 3){
+    print 23;
+} else {
+    print 10000;
+}
+
+if (2 < 3){
+    print 23;
+} else {
+    print 10000;
+}
