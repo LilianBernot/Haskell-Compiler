@@ -98,8 +98,10 @@ VariableNames : varname {declareVariable $1}
 Boolean : false { push "1"}
   | true { push "0" }
 
-Comparison : Expr superior Expr { $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
-  | Expr inferior Expr { $1 ++ $3 ++ substract }
+Comparison : Expr superior Expr { push "1\n" ++ substract ++ $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
+  | Expr inferior Expr { $1 ++ push "1\n" ++ add ++ $3 ++ substract }
+  | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
+  | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
