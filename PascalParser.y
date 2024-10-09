@@ -36,7 +36,8 @@ import PascaLex
   while {TK _ WHILE}
   lcb {TK _ LEFTCURLYBRACKET}
   rcb {TK _ RIGHTCURLYBRACKET}
-  
+  lsb {TK _ LEFTSQUAREDBRACKET}
+  rsb {TK _ RIGHTSQUAREDBRACKET}
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}
@@ -75,6 +76,7 @@ VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}
   | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
   | array varname integer {$2 ++"\tDS\t" ++ (show $3) ++ "\n"}
+  | varname lsb Expr rsb assign Expr {"\tPUSH\t" ++ $1 ++"\n" ++ $3 ++ "\tADD\n" ++ $6 ++ "\tSTORE\n"}
 
 Expr : Term  { $1 } 
   | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers

@@ -29,6 +29,8 @@ tokens :-
   <0> array {\p _ -> TK p ARRAY}
   <0> \{ {\p _ -> TK p LEFTCURLYBRACKET}
   <0> \} {\p _ -> TK p RIGHTCURLYBRACKET}
+  <0> \[ {\p _ -> TK p LEFTSQUAREDBRACKET}
+  <0> \] {\p _ -> TK p RIGHTSQUAREDBRACKET}
   <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
 
 {
@@ -59,6 +61,8 @@ data TokenName
   | LEFTCURLYBRACKET
   | RIGHTCURLYBRACKET
   | ARRAY
+  | LEFTSQUAREDBRACKET
+  | RIGHTSQUAREDBRACKET
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens

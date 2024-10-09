@@ -51,3 +51,4 @@ if (2 + 2) {
 -- print a;
 
 array array0 5;
+array0[0] = 2;
