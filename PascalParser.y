@@ -30,10 +30,10 @@ import PascaLex
   assign {TK _ ASSIGN}
   input {TK _ IN}
   if {TK _ IF}
-  then {TK _ THEN}
   else {TK _ ELSE}
-  endif {TK _ ENDIF}
-
+  left_curly_bracket {TK _ LEFTCURLYBRACKET}
+  right_curly_bracket {TK _ RIGHTCURLYBRACKET}
+  
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}
@@ -50,8 +50,8 @@ Inst : Print ';' {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
-IfStatement : if Expr then Linst endif { ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
-  | if Expr then Inst else Inst {";/ ELSE TEST"}
+IfStatement : if Expr left_curly_bracket Linst right_curly_bracket else left_curly_bracket Linst right_curly_bracket { ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\tlabelElse\n" ++ $4 ++ "\tPUSH\tlabelFin\n" ++ "\tGOTO\n" ++ "labelElse\tEQU\t*\n" ++ $8 ++ "labelFin\tEQU\t*\n" }
+  | if Expr left_curly_bracket Linst right_curly_bracket { ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
 
 VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}
