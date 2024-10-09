@@ -71,14 +71,14 @@ Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ $2 ++ bez labelEndWhile ++ $4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ $2 ++ bez labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ "\tEQU\t*\n"
 }
 
 IfStatement : 
   if Expr lcb Linst rcb else lcb Linst rcb { 
     let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
     let labelElse = "labelElse" ++ show(getTLine $6) ++ "Col" ++ show(getTCol $6) in
-    ";/ If Then Else Condition\n" ++ $2 ++ bez labelElse ++ $4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ $8 ++ labelIf ++ "\tEQU\t*\n" 
+    ";/ If Then Else Condition\n" ++ $2 ++ bez labelElse ++ $4 ++ push labelIf ++ goto ++ labelElse ++ "\tEQU\t*\n" ++ $8 ++ labelIf ++ "\tEQU\t*\n" 
   }
   | if Expr lcb Linst rcb { 
       let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
@@ -138,6 +138,7 @@ add = "\tADD\n"
 substract = "\tSUB\n"
 divide = "\tDIV\n"
 multiply = "\tMUL\n"
+goto = "\tGOTO\n"
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
