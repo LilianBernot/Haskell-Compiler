@@ -28,6 +28,7 @@ import PascaLex
   power {TK _ POWER}
   var {TK _ VAR}
   varname {TK _ (VARNAME $$)}
+  array {TK _ ARRAY}
   assign {TK _ ASSIGN}
   input {TK _ IN}
   if {TK _ IF}
@@ -73,6 +74,7 @@ IfStatement :
 VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}
   | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
+  | array varname integer {$2 ++"\tDS\t" ++ (show $3) ++ "\n"}
 
 Expr : Term  { $1 } 
   | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers

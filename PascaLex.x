@@ -26,6 +26,7 @@ tokens :-
   <0> if {\p _ -> TK p IF}
   <0> else {\p _ -> TK p ELSE}
   <0> while {\p _ -> TK p WHILE}
+  <0> array {\p _ -> TK p ARRAY}
   <0> \{ {\p _ -> TK p LEFTCURLYBRACKET}
   <0> \} {\p _ -> TK p RIGHTCURLYBRACKET}
   <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
@@ -57,6 +58,7 @@ data TokenName
   | WHILE
   | LEFTCURLYBRACKET
   | RIGHTCURLYBRACKET
+  | ARRAY
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens
