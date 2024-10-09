@@ -60,7 +60,7 @@ Linst : Inst {$1}
 Inst : Print ';' {$1}
   | ';' { "" }
   | VariableDeclaration {$1}
-  | input varname { push $2 ++ "\tIN\n" ++ "\tSTORE\n"}
+  | input varname { push $2 ++ "\tIN\n" ++ store}
   -- push the varname, in saves value in stack -> STORE in in data
   | IfStatement {$1}
   | WhileStatement {$1}
@@ -89,7 +89,7 @@ VariableDeclaration : var VariableNames {$2}
   | varname assign Expr {affectVariableValue $1 $3}
   | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
   | array varname integer {$2 ++"\tDS\t" ++ (show $3) ++ "\n"}
-  | varname lsb Expr rsb assign Expr {getArrayElementFromIndex $1 $3 ++ $6 ++ "\tSTORE\n"}
+  | varname lsb Expr rsb assign Expr {getArrayElementFromIndex $1 $3 ++ $6 ++ store}
 
 VariableNames : varname {declareVariable $1}
   | varname comma VariableNames { declareVariable $1 ++ $3}
@@ -140,12 +140,13 @@ divide = "\tDIV\n"
 multiply = "\tMUL\n"
 goto = "\tGOTO\n"
 equ = "\tEQU\t*\n"
+store = "\tSTORE\n"
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
 
 affectVariableValue :: String -> String -> String
-affectVariableValue name value = push name ++ value ++ "\tSTORE\n"
+affectVariableValue name value = push name ++ value ++ store
 
 getArrayElementFromIndex :: String -> String -> String
 getArrayElementFromIndex array_name index = push array_name ++ index ++ add
