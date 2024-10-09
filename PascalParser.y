@@ -32,6 +32,7 @@ import PascaLex
   input {TK _ IN}
   if {TK _ IF}
   else {TK _ ELSE}
+  while {TK _ WHILE}
   lcb {TK _ LEFTCURLYBRACKET}
   rcb {TK _ RIGHTCURLYBRACKET}
   
@@ -48,8 +49,15 @@ Inst : Print ';' {$1}
   | input varname { "\tPUSH\t" ++ $2 ++ "\n\tIN\n" ++ "\tSTORE\n"}
   -- PUSH the varname, IN saves value in stack -> STORE in in data
   | IfStatement {$1}
+  | WhileStatement {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
+
+WhileStatement : while Expr lcb Linst rcb {
+  let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
+  let labelEndWhile = "labelEndWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
+  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ $2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ $4 ++ "\tPUSH\t" ++ labelStartWhile ++ "\n\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+}
 
 IfStatement : 
   if Expr lcb Linst rcb else lcb Linst rcb { 

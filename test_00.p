@@ -30,3 +30,21 @@ if (2 + 2) {
 }
 
 print 5 % 2;
+
+var reducer = 3;
+while reducer {
+    print reducer;
+    reducer = reducer - 1;
+};
+
+-- Euclide algorithm
+var a;
+input a;
+var b;
+input b;
+while b {
+    var remainder = a % b;
+    a = b;
+    b = remainder;
+}
+print a;

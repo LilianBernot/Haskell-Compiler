@@ -25,6 +25,7 @@ tokens :-
   <0> input {\p _ -> TK p IN}
   <0> if {\p _ -> TK p IF}
   <0> else {\p _ -> TK p ELSE}
+  <0> while {\p _ -> TK p WHILE}
   <0> \{ {\p _ -> TK p LEFTCURLYBRACKET}
   <0> \} {\p _ -> TK p RIGHTCURLYBRACKET}
   <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
@@ -53,6 +54,7 @@ data TokenName
   | IN
   | IF 
   | ELSE
+  | WHILE
   | LEFTCURLYBRACKET
   | RIGHTCURLYBRACKET
   deriving (Eq,Show)
