@@ -44,6 +44,12 @@ import PascaLex
   not {TK _ NOT}
   true {TK _ TRUE}
   false {TK _ FALSE}
+  superior_or_equal {TK _ SUPERIROROREQUAL}
+  superior {TK _ SUPERIROR}
+  inferior_or_equal {TK _ INFERIOROREQUAL}
+  inferior {TK _ INFERIOR}
+  compare_equal {TK _ COMPAREEQUAL}
+  compare_different {TK _ COMPAREDIFFERENT}
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}

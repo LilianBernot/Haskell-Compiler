@@ -21,6 +21,12 @@ tokens :-
   <0> \-\-.* ; -- we skip the comments
   -- TODO : skip comments zones
   <0> var {\p _ -> TK p VAR}
+  <0> \>\= {\p _ -> TK p SUPERIROROREQUAL}
+  <0> \> {\p _ -> TK p SUPERIROR}
+  <0> \<\= {\p _ -> TK p INFERIOROREQUAL}
+  <0> \< {\p _ -> TK p INFERIOR}
+  <0> \=\= {\p _ -> TK p COMPAREEQUAL}
+  <0> \!\= {\p _ -> TK p COMPAREDIFFERENT}
   <0> \= {\p _ -> TK p ASSIGN}
   <0> input {\p _ -> TK p IN}
   <0> if {\p _ -> TK p IF}
@@ -75,6 +81,12 @@ data TokenName
   | NOT 
   | TRUE 
   | FALSE
+  | SUPERIROROREQUAL
+  | SUPERIROR
+  | INFERIOROREQUAL
+  | INFERIOR
+  | COMPAREEQUAL
+  | COMPAREDIFFERENT
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens
