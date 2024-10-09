@@ -29,6 +29,8 @@ import PascaLex
   varname {TK _ (VARNAME $$)}
   assign {TK _ ASSIGN}
   input {TK _ IN}
+  if {TK _ IF}
+  then {TK _ THEN}
 
 
 %%
@@ -42,8 +44,11 @@ Inst : Print ';' {$1}
   | VariableDeclaration {$1}
   | input varname { "\tPUSH\t" ++ $2 ++ "\n\tIN\n" ++ "\tSTORE\n"}
   -- PUSH the varname, IN saves value in stack -> STORE in in data
+  | IfStatement {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
+
+IfStatement : if Expr then Inst { ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
 
 VariableDeclaration : var varname {declareVariable $2}
   | varname assign Expr {affectVariableValue $1 $3}
