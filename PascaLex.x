@@ -21,6 +21,7 @@ tokens :-
   -- TODO : skip comments zones
   <0> var {\p _ -> TK p VAR}
   <0> \= {\p _ -> TK p ASSIGN}
+  <0> input {\p _ -> TK p IN}
   <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
 
 {
@@ -43,6 +44,7 @@ data TokenName
   | VAR
   | VARNAME String
   | ASSIGN
+  | IN
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens

@@ -28,6 +28,7 @@ import PascaLex
   var {TK _ VAR}
   varname {TK _ (VARNAME $$)}
   assign {TK _ ASSIGN}
+  input {TK _ IN}
 
 
 %%
@@ -39,6 +40,8 @@ Linst : Inst {$1}
 Inst : Print ';' {$1}
   | ';' { "" }
   | VariableDeclaration {$1}
+  | input varname { "\tPUSH\t" ++ $2 ++ "\n\tIN\n" ++ "\tSTORE\n"}
+  -- PUSH the varname, IN saves value in stack -> STORE in in data
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
