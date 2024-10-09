@@ -230,7 +230,7 @@ happyReduction_12 (_ `HappyStk`
          = HappyAbsSyn8
                  (let labelStartWhile = "labelStartWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ happy_var_4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ happy_var_2 ++ bez labelEndWhile ++ happy_var_4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -249,7 +249,7 @@ happyReduction_13 (_ `HappyStk`
          = HappyAbsSyn9
                  (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
     let labelElse = "labelElse" ++ show(getTLine happy_var_6) ++ "Col" ++ show(getTCol happy_var_6) in
-    ";/ If Then Else Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ happy_var_4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
+    ";/ If Then Else Condition\n" ++ happy_var_2 ++ bez labelElse ++ happy_var_4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -263,7 +263,7 @@ happyReduction_14 (_ `HappyStk`
         happyRest)
          = HappyAbsSyn9
                  (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
-      ";/ If Then Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelIf ++ "\n" ++ happy_var_4 ++ labelIf ++ "\tEQU\t*\n"
+      ";/ If Then Condition\n" ++ happy_var_2 ++ bez labelIf ++ happy_var_4 ++ labelIf ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -592,6 +592,9 @@ affectVariableValue name value = push name ++ value ++ "\tSTORE\n"
 
 getArrayElementFromIndex :: String -> String -> String
 getArrayElementFromIndex array_name index = push array_name ++ index ++ add
+
+bez :: String -> String
+bez label = "\tBEZ\t" ++ label ++ "\n"
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
 #if !defined(__GLASGOW_HASKELL__)
