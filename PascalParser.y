@@ -32,6 +32,7 @@ import PascaLex
   if {TK _ IF}
   then {TK _ THEN}
   else {TK _ ELSE}
+  endif {TK _ ENDIF}
 
 
 %%
@@ -49,7 +50,7 @@ Inst : Print ';' {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 
-IfStatement : if Expr then Inst { ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
+IfStatement : if Expr then Linst endif { ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\tlabelFin\n" ++ $4 ++ "labelFin\tEQU\t*\n" }
   | if Expr then Inst else Inst {";/ ELSE TEST"}
 
 VariableDeclaration : var varname {declareVariable $2}

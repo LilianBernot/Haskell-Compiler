@@ -17,9 +17,14 @@ print 3;
 -- input yourVariable;
 -- print yourVariable + 6;
 -- Try if then else condition
--- if (2 + 2) then print 999999;
 if (2 + 2) 
     then 
-        print 999999; 
-    else 
+        print 999999;
         print 11111;
+endif
+print 4;
+-- if (2 + 2) 
+--     then 
+--         print 999999; 
+--     else 
+--         print 11111;

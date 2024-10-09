@@ -25,6 +25,7 @@ tokens :-
   <0> if {\p _ -> TK p IF}
   <0> then {\p _ -> TK p THEN}
   <0> else {\p _ -> TK p ELSE}
+  <0> endif {\p _ -> TK p ENDIF}
   <0> [a-zA-Z][a-zA-Z0-9]* {\p s -> TK p (VARNAME s)}
 
 {
@@ -51,6 +52,7 @@ data TokenName
   | IF 
   | THEN 
   | ELSE
+  | ENDIF
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens
