@@ -38,6 +38,7 @@ import PascaLex
   rcb {TK _ RIGHTCURLYBRACKET}
   lsb {TK _ LEFTSQUAREDBRACKET}
   rsb {TK _ RIGHTSQUAREDBRACKET}
+  comma {TK _ COMMA}
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}
@@ -73,11 +74,15 @@ IfStatement :
       ";/ If Then Condition\n" ++ $2 ++ "\tBEZ\t" ++ labelIf ++ "\n" ++ $4 ++ labelIf ++ "\tEQU\t*\n" 
     }
 
-VariableDeclaration : var varname {declareVariable $2}
+VariableDeclaration : var VariableNames {$2}
   | varname assign Expr {affectVariableValue $1 $3}
   | var varname assign Expr {declareVariable $2 ++ affectVariableValue $2 $4}
   | array varname integer {$2 ++"\tDS\t" ++ (show $3) ++ "\n"}
   | varname lsb Expr rsb assign Expr {getArrayElementFromIndex $1 $3 ++ $6 ++ "\tSTORE\n"}
+
+VariableNames : varname {declareVariable $1}
+  | varname comma VariableNames { declareVariable $1 ++ $3}
+  -- TODO : this is only "initialization" of variables -> add declaration with values
 
 Expr : Term  { $1 } 
   | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers

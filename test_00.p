@@ -53,3 +53,5 @@ if (2 + 2) {
 array arr 5;
 arr[2] = 17;
 print arr[1+1];
+
+var a, b, c;
