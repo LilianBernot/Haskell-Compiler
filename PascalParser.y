@@ -49,8 +49,8 @@ Linst : Inst {$1}
 Inst : Print ';' {$1}
   | ';' { "" }
   | VariableDeclaration {$1}
-  | input varname { "\tPUSH\t" ++ $2 ++ "\n\tIN\n" ++ "\tSTORE\n"}
-  -- PUSH the varname, IN saves value in stack -> STORE in in data
+  | input varname { push $2 ++ "\tIN\n" ++ "\tSTORE\n"}
+  -- push the varname, in saves value in stack -> STORE in in data
   | IfStatement {$1}
   | WhileStatement {$1}
 
@@ -60,14 +60,14 @@ Print : print Expr {";/ print...\n" ++ $2 ++ "\tOUT\n"}
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ $2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ $4 ++ "\tPUSH\t" ++ labelStartWhile ++ "\n\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ $2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ $4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
 }
 
 IfStatement : 
   if Expr lcb Linst rcb else lcb Linst rcb { 
     let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
     let labelElse = "labelElse" ++ show(getTLine $6) ++ "Col" ++ show(getTCol $6) in
-    ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ $4 ++ "\tPUSH\t" ++ labelIf ++ "\n" ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ $8 ++ labelIf ++ "\tEQU\t*\n" 
+    ";/ If Then Else Condition\n" ++ $2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ $4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ $8 ++ labelIf ++ "\tEQU\t*\n" 
   }
   | if Expr lcb Linst rcb { 
       let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
@@ -85,18 +85,18 @@ VariableNames : varname {declareVariable $1}
   -- TODO : this is only "initialization" of variables -> add declaration with values
 
 Expr : Term  { $1 } 
-  | sub Expr { "\tPUSH\t" ++ "0" ++ "\n" ++ $2 ++ "\tSUB\n"  } -- negative numbers
-  | Expr plus Expr  { $1 ++ $3 ++ "\tADD\n" } 
-  | Expr sub Expr  { $1 ++ $3 ++ "\tSUB\n" } 
-  | Expr mod Expr { $1 ++ $1 ++ $3 ++ "\tDIV\n" ++ $3 ++ "\tMUL\n" ++ "\tSUB\n" }
+  | sub Expr { push "0" ++ $2 ++ substract  } -- negative numbers
+  | Expr plus Expr  { $1 ++ $3 ++ add } 
+  | Expr sub Expr  { $1 ++ $3 ++ substract } 
+  | Expr mod Expr { $1 ++ $1 ++ $3 ++ divide ++ $3 ++ multiply ++ substract }
 
 Term : Factor  { $1 } 
-  | Term mul Factor  { $1 ++ $3 ++ "\tMUL\n" } 
-  | Term div Factor  { $1 ++ $3 ++ "\tDIV\n" } 
+  | Term mul Factor  { $1 ++ $3 ++ multiply } 
+  | Term div Factor  { $1 ++ $3 ++ divide } 
 
-Factor : integer {"\tPUSH\t" ++ (show $1) ++ "\n"}
+Factor : integer { push (show $1)}
   | lpar Expr rpar  { $2 }
-  | varname { "\tPUSH\t" ++ $1 ++ "\n" ++ "\tLOAD\n" }
+  | varname { push $1 ++ "\tLOAD\n" }
 
 {
 
@@ -115,14 +115,23 @@ parseError :: [Token] -> ParseResult a
 parseError [] = error "Parse error at the end of input"
 parseError (h:_) = error $ "Parse error at line " ++ show (getTLine h) ++ ", column " ++ show (getTCol h) ++ ", on token " ++ show h
 
+push :: String -> String
+push string = "\tPUSH\t" ++ string ++ "\n"
+
+-- Define small strings
+add = "\tADD\n"
+substract = "\tSUB\n"
+divide = "\tDIV\n"
+multiply = "\tMUL\n"
+
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
 
 affectVariableValue :: String -> String -> String
-affectVariableValue name value = "\tPUSH\t" ++ name ++"\n" ++ value ++ "\tSTORE\n"
+affectVariableValue name value = push name ++ value ++ "\tSTORE\n"
 
 getArrayElementFromIndex :: String -> String -> String
-getArrayElementFromIndex array_name index = "\tPUSH\t" ++ array_name ++"\n" ++ index ++ "\tADD\n"
+getArrayElementFromIndex array_name index = push array_name ++ index ++ add
 }
 
 

@@ -169,7 +169,7 @@ happyReduce_7 = happySpecReduce_2  2# happyReduction_7
 happyReduction_7 (HappyTerminal (TK _ (VARNAME happy_var_2)))
         _
          =  HappyAbsSyn6
-                 ("\tPUSH\t" ++ happy_var_2 ++ "\n\tIN\n" ++ "\tSTORE\n"
+                 (push happy_var_2 ++ "\tIN\n" ++ "\tSTORE\n"
         )
 happyReduction_7 _ _  = notHappyAtAll 
 
@@ -226,7 +226,7 @@ happyReduction_12 (_ `HappyStk`
          = HappyAbsSyn8
                  (let labelStartWhile = "labelStartWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ happy_var_4 ++ "\tPUSH\t" ++ labelStartWhile ++ "\n\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
+  ";/ While Loop\n" ++ labelStartWhile ++ "\tEQU\t*\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelEndWhile ++ "\n" ++ happy_var_4 ++ push labelStartWhile ++ "\tGOTO\n" ++ labelEndWhile ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -245,7 +245,7 @@ happyReduction_13 (_ `HappyStk`
          = HappyAbsSyn9
                  (let labelIf = "labelIf" ++ show(getTLine happy_var_1) ++ "Col" ++ show(getTCol happy_var_1) in
     let labelElse = "labelElse" ++ show(getTLine happy_var_6) ++ "Col" ++ show(getTCol happy_var_6) in
-    ";/ If Then Else Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ happy_var_4 ++ "\tPUSH\t" ++ labelIf ++ "\n" ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
+    ";/ If Then Else Condition\n" ++ happy_var_2 ++ "\tBEZ\t" ++ labelElse ++ "\n" ++ happy_var_4 ++ push labelIf ++ "\tGOTO\n" ++ labelElse ++ "\tEQU\t*\n" ++ happy_var_8 ++ labelIf ++ "\tEQU\t*\n"
         ) `HappyStk` happyRest
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -355,7 +355,7 @@ happyReduce_23 = happySpecReduce_2  8# happyReduction_23
 happyReduction_23 (HappyAbsSyn12  happy_var_2)
         _
          =  HappyAbsSyn12
-                 ("\tPUSH\t" ++ "0" ++ "\n" ++ happy_var_2 ++ "\tSUB\n"
+                 (push "0" ++ happy_var_2 ++ substract
         )
 happyReduction_23 _ _  = notHappyAtAll 
 
@@ -366,7 +366,7 @@ happyReduction_24 (HappyAbsSyn12  happy_var_3)
         _
         (HappyAbsSyn12  happy_var_1)
          =  HappyAbsSyn12
-                 (happy_var_1 ++ happy_var_3 ++ "\tADD\n"
+                 (happy_var_1 ++ happy_var_3 ++ add
         )
 happyReduction_24 _ _ _  = notHappyAtAll 
 
@@ -377,7 +377,7 @@ happyReduction_25 (HappyAbsSyn12  happy_var_3)
         _
         (HappyAbsSyn12  happy_var_1)
          =  HappyAbsSyn12
-                 (happy_var_1 ++ happy_var_3 ++ "\tSUB\n"
+                 (happy_var_1 ++ happy_var_3 ++ substract
         )
 happyReduction_25 _ _ _  = notHappyAtAll 
 
@@ -388,7 +388,7 @@ happyReduction_26 (HappyAbsSyn12  happy_var_3)
         _
         (HappyAbsSyn12  happy_var_1)
          =  HappyAbsSyn12
-                 (happy_var_1 ++ happy_var_1 ++ happy_var_3 ++ "\tDIV\n" ++ happy_var_3 ++ "\tMUL\n" ++ "\tSUB\n"
+                 (happy_var_1 ++ happy_var_1 ++ happy_var_3 ++ divide ++ happy_var_3 ++ multiply ++ substract
         )
 happyReduction_26 _ _ _  = notHappyAtAll 
 
@@ -408,7 +408,7 @@ happyReduction_28 (HappyAbsSyn14  happy_var_3)
         _
         (HappyAbsSyn13  happy_var_1)
          =  HappyAbsSyn13
-                 (happy_var_1 ++ happy_var_3 ++ "\tMUL\n"
+                 (happy_var_1 ++ happy_var_3 ++ multiply
         )
 happyReduction_28 _ _ _  = notHappyAtAll 
 
@@ -419,7 +419,7 @@ happyReduction_29 (HappyAbsSyn14  happy_var_3)
         _
         (HappyAbsSyn13  happy_var_1)
          =  HappyAbsSyn13
-                 (happy_var_1 ++ happy_var_3 ++ "\tDIV\n"
+                 (happy_var_1 ++ happy_var_3 ++ divide
         )
 happyReduction_29 _ _ _  = notHappyAtAll 
 
@@ -428,7 +428,7 @@ happyReduction_29 _ _ _  = notHappyAtAll
 happyReduce_30 = happySpecReduce_1  10# happyReduction_30
 happyReduction_30 (HappyTerminal (TK _ (INT happy_var_1)))
          =  HappyAbsSyn14
-                 ("\tPUSH\t" ++ (show happy_var_1) ++ "\n"
+                 (push (show happy_var_1)
         )
 happyReduction_30 _  = notHappyAtAll 
 
@@ -448,7 +448,7 @@ happyReduction_31 _ _ _  = notHappyAtAll
 happyReduce_32 = happySpecReduce_1  10# happyReduction_32
 happyReduction_32 (HappyTerminal (TK _ (VARNAME happy_var_1)))
          =  HappyAbsSyn14
-                 ("\tPUSH\t" ++ happy_var_1 ++ "\n" ++ "\tLOAD\n"
+                 (push happy_var_1 ++ "\tLOAD\n"
         )
 happyReduction_32 _  = notHappyAtAll 
 
@@ -535,14 +535,23 @@ parseError :: [Token] -> ParseResult a
 parseError [] = error "Parse error at the end of input"
 parseError (h:_) = error $ "Parse error at line " ++ show (getTLine h) ++ ", column " ++ show (getTCol h) ++ ", on token " ++ show h
 
+push :: String -> String
+push string = "\tPUSH\t" ++ string ++ "\n"
+
+-- Define small strings
+add = "\tADD\n"
+substract = "\tSUB\n"
+divide = "\tDIV\n"
+multiply = "\tMUL\n"
+
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
 
 affectVariableValue :: String -> String -> String
-affectVariableValue name value = "\tPUSH\t" ++ name ++"\n" ++ value ++ "\tSTORE\n"
+affectVariableValue name value = push name ++ value ++ "\tSTORE\n"
 
 getArrayElementFromIndex :: String -> String -> String
-getArrayElementFromIndex array_name index = "\tPUSH\t" ++ array_name ++"\n" ++ index ++ "\tADD\n"
+getArrayElementFromIndex array_name index = push array_name ++ index ++ add
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
 #if !defined(__GLASGOW_HASKELL__)
