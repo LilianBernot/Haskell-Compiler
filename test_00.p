@@ -55,3 +55,6 @@ arr[2] = 17;
 print arr[1+1];
 
 var a, b, c;
+
+print false;
+print true;

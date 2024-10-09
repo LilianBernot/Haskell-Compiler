@@ -39,6 +39,11 @@ import PascaLex
   lsb {TK _ LEFTSQUAREDBRACKET}
   rsb {TK _ RIGHTSQUAREDBRACKET}
   comma {TK _ COMMA}
+  or {TK _ OR}
+  and {TK _ AND}
+  not {TK _ NOT}
+  true {TK _ TRUE}
+  false {TK _ FALSE}
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}
@@ -84,7 +89,11 @@ VariableNames : varname {declareVariable $1}
   | varname comma VariableNames { declareVariable $1 ++ $3}
   -- TODO : this is only "initialization" of variables -> add declaration with values
 
+Boolean : false { push "1"}
+  | true { push "0" }
+
 Expr : Term  { $1 } 
+  | Boolean { $1 }
   | sub Expr { push "0" ++ $2 ++ substract  } -- negative numbers
   | Expr plus Expr  { $1 ++ $3 ++ add } 
   | Expr sub Expr  { $1 ++ $3 ++ substract } 
