@@ -50,6 +50,8 @@ import PascaLex
   inferior {TK _ INFERIOR}
   compare_equal {TK _ COMPAREEQUAL}
   compare_different {TK _ COMPAREDIFFERENT}
+  open_multiline_comment {TK _ OPENMULTILINECOMMENT}
+  close_multiline_comment {TK _ CLOSEMULTILINECOMMENT}
 
 %%
 Program : Linst {$1 ++ "\tSTOP\n"}
@@ -59,6 +61,7 @@ Linst : Inst {$1}
 
 Inst : Print ';' {$1}
   | ';' { "" }
+  | open_multiline_comment Linst close_multiline_comment { "" }
   | VariableDeclaration {$1}
   | input varname { push $2 ++ "\tIN\n" ++ store}
   -- push the varname, in saves value in stack -> STORE in in data

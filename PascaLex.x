@@ -18,6 +18,8 @@ tokens :-
   <0> \% {\p _ -> TK p MOD}
   <0> \( {\p _ -> TK p LPAR}
   <0> \) {\p _ -> TK p RPAR}
+  <0> \{\-\- {\p _ -> TK p OPENMULTILINECOMMENT}
+  <0> \-\-\} {\p _ -> TK p CLOSEMULTILINECOMMENT}
   <0> \-\-.* ; -- we skip the comments
   -- TODO : skip comments zones
   <0> var {\p _ -> TK p VAR}
@@ -87,6 +89,8 @@ data TokenName
   | INFERIOR
   | COMPAREEQUAL
   | COMPAREDIFFERENT
+  | OPENMULTILINECOMMENT
+  | CLOSEMULTILINECOMMENT
   deriving (Eq,Show)
 
 scanTokens = alexScanTokens
