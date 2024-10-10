@@ -98,31 +98,40 @@ VariableNames : varname {declareVariable $1}
   | varname comma VariableNames { declareVariable $1 ++ $3}
   -- TODO : this is only "initialization" of variables -> add declaration with values
 
-Boolean : false { push "1"}
-  | true { push "0" }
+Boolean : false { false_bool }
+  | true { true_bool }
 
-BooleanComparison : true and true { push "0" }
-  | true and false { push "1"}
-  | false and true { push "1"}
-  | false and false { push "1"}
-  | true or true { push "0" }
-  | true or false { push "0" }
-  | false or true { push "0" }
-  | false or false { push "1"}
-  | not true { push "1"}
-  | not false { push "0" }
+BooleanComparison : true and true { true_bool }
+  | true and false { false_bool}
+  | false and true { false_bool}
+  | false and false { false_bool}
+  | true or true { true_bool }
+  | true or false { true_bool }
+  | false or true { true_bool }
+  | false or false { false_bool}
+  | not true { false_bool}
+  | not false { true_bool }
 
 Comparison : BooleanComparison { $1 }
   | Expr superior Expr { push "1\n" ++ substract ++ $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
   | Expr inferior Expr { $1 ++ push "1\n" ++ add ++ $3 ++ substract }
   | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
   | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
-  | Expr compare_equal Expr { $3 ++ $1 ++ substract ++ $1 ++ $3 ++ substract ++ "\tAND\n" }
+  | Expr compare_equal Expr { 
+    -- a >=b and a <= b
+    $3 ++ $1 ++ substract 
+    ++ $1 ++ $3 ++ substract 
+    ++ "\tAND\n" }
+  | Expr compare_different Expr { 
+      -- a > b or b > a
+      push "1\n" ++ substract ++ $3 ++ $1 ++ substract 
+      ++ $1 ++ push "1\n" ++ add ++ $3 ++ substract 
+      ++ "\tOR\n" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
   | Comparison { $1 }
-  | sub Expr { push "0" ++ $2 ++ substract  } -- negative numbers
+  | sub Expr { true_bool ++ $2 ++ substract  } -- negative numbers
   | Expr plus Expr  { $1 ++ $3 ++ add } 
   | Expr sub Expr  { $1 ++ $3 ++ substract } 
   | Expr mod Expr { $1 ++ $1 ++ $3 ++ divide ++ $3 ++ multiply ++ substract }
@@ -165,6 +174,8 @@ equ = "\tEQU\t*\n"
 store = "\tSTORE\n"
 out = "\tOUT\n"
 load = "\tLOAD\n"
+false_bool = push "1"
+true_bool = push "0" 
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"

@@ -18,12 +18,14 @@ print 2*(var1 + 3) - var0;
 -- print yourVariable + 6;
 
 -- Try if then else condition
+{--
 if (2 + 2) { 
     print 888888; 
     print 777777; 
 } else {
     print 22222;
 }
+--}
 
 -- if (2 + 2) {
 --     print 999999;
@@ -50,6 +52,7 @@ if (2 + 2) {
 -- }
 -- print a;
 
+{--
 array arr 5;
 arr[2] = 17;
 print arr[1+1];
@@ -89,7 +92,6 @@ if (3 >= 3){
     print 10000;
 }
 
-{--
 if (4 >= 3){
     print 23;
 } else {
@@ -98,8 +100,12 @@ if (4 >= 3){
 --}
 
 print true;
+{--
 print true and true;
 print true and false;
 print true or false;
+--}
 print 67 == 67;
 print 67 == 98928;
+print 67 != 67;
+print 67 != 98928;
