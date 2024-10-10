@@ -117,6 +117,7 @@ Comparison : BooleanComparison { $1 }
   | Expr inferior Expr { $1 ++ push "1\n" ++ add ++ $3 ++ substract }
   | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
   | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
+  | Expr compare_equal Expr { $3 ++ $1 ++ substract ++ $1 ++ $3 ++ substract ++ "\tAND\n" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }

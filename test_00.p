@@ -97,6 +97,9 @@ if (4 >= 3){
 }
 --}
 
+print true;
 print true and true;
 print true and false;
 print true or false;
+print 67 == 67;
+print 67 == 98928;
