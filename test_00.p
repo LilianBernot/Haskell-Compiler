@@ -96,3 +96,7 @@ if (4 >= 3){
     print 10000;
 }
 --}
+
+print true and true;
+print true and false;
+print true or false;

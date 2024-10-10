@@ -101,7 +101,19 @@ VariableNames : varname {declareVariable $1}
 Boolean : false { push "1"}
   | true { push "0" }
 
-Comparison : Expr superior Expr { push "1\n" ++ substract ++ $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
+BooleanComparison : true and true { push "0" }
+  | true and false { push "1"}
+  | false and true { push "1"}
+  | false and false { push "1"}
+  | true or true { push "0" }
+  | true or false { push "0" }
+  | false or true { push "0" }
+  | false or false { push "1"}
+  | not true { push "1"}
+  | not false { push "0" }
+
+Comparison : BooleanComparison { $1 }
+  | Expr superior Expr { push "1\n" ++ substract ++ $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
   | Expr inferior Expr { $1 ++ push "1\n" ++ add ++ $3 ++ substract }
   | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
   | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
