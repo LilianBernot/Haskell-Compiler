@@ -4,3 +4,11 @@ def foo(){
 };
 
 print foo();
+
+def fooBis(a){
+    print a;
+    print 90;
+    return 67;
+};
+
+print fooBis(1000);

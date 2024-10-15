@@ -119,7 +119,12 @@ FunctionDeclaration : def varname lpar rpar lcb FunctionListInst rcb {
   -- ListInst
   -- GOTO (top element in stack will be created by function caller)
   -- LabelEndFunc
-}
+} 
+  | def varname lpar FunctionArgumentVariables rpar lcb FunctionListInst rcb {
+  let labelEnd = labelEndFunction $2 in 
+  let labelRun = labelRunFunction $2 in
+  push labelEnd ++ goto ++ labelRun ++ equ ++ $4 ++ $7 ++ swap ++ goto ++ labelEnd ++ equ
+} 
 
 FunctionCall : varname lpar rpar { 
     let labelCall = labelCallFunction $2 in
@@ -129,10 +134,23 @@ FunctionCall : varname lpar rpar {
     -- PUSH LabelRUN + GOTO 
     -- LabelCallFunc
 }
+  | varname lpar FunctionArgument rpar { 
+    let labelCall = labelCallFunction $2 in
+    let labelRun = labelRunFunction $1 in
+    push labelCall ++ push labelRun ++ goto ++ labelCall ++ equ ++ $3
+}
 
 FunctionListInst : Inst FunctionListInst { $1 ++ $2 }
   | return Expr ';' { $2 }
   -- for the return, we push the value and then do a SWAP
+
+FunctionArgumentVariables : VariableNames comma FunctionArgumentVariables { $1 ++ swap ++ store ++ $3 }
+  | VariableNames { $1 }
+  -- push varname + swap to get value on top + store
+
+FunctionArgument : FunctionArgument comma Expr { $3 ++ $1 }
+  | Expr { $1 }
+  -- We unpack the given values starting from the last one
 
 
 Boolean : false { false_bool }
