@@ -491,9 +491,7 @@ happyReduction_35 (HappyAbsSyn15  happy_var_3)
         (HappyTerminal happy_var_2)
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
-                 (let labelTrue = createLabelTrue happy_var_2 in
-      let labelFalse = createLabelFalse happy_var_2 in
-      ";/ Compare Inferior Condition\n" ++ compareInf happy_var_1 happy_var_3 labelTrue labelFalse
+                 (";/ Compare Inferior Condition\n" ++ compareInf happy_var_1 happy_var_3 happy_var_2
         )
 happyReduction_35 _ _ _  = notHappyAtAll 
 
@@ -504,9 +502,7 @@ happyReduction_36 (HappyAbsSyn15  happy_var_3)
         (HappyTerminal happy_var_2)
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
-                 (let labelTrue = createLabelTrue happy_var_2 in
-      let labelFalse = createLabelFalse happy_var_2 in
-      ";/ Compare Superior Condition\n" ++ compareInf happy_var_3 happy_var_1 labelTrue labelFalse
+                 (";/ Compare Superior Condition\n" ++ compareInf happy_var_3 happy_var_1 happy_var_2
         )
 happyReduction_36 _ _ _  = notHappyAtAll 
 
@@ -773,8 +769,21 @@ bez label = "\tBEZ\t" ++ label ++ "\n"
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
 
-compareInf :: String -> String -> String -> String -> String
-compareInf a b labelIf labelElse = b ++ a ++ substract ++ bgz labelIf ++ push "0" ++ push labelElse ++ goto ++ labelIf ++ equ ++ push "1" ++ labelElse ++ equ
+compareInf :: String -> String -> Token -> String
+-- | Compares two strings (a and b) based on a provided comparator token.
+-- 
+--   Parameters:
+--     a          - The first string to compare.
+--     b          - The second string to compare.
+--     comparator - A token representing the comparison operator to create the labels.
+-- 
+--   Returns:
+--     A string that contains a sequence of instructions generated 
+--     based on the result of comparing `a` and `b` using the `comparator`.
+compareInf a b comparator = 
+      let labelTrue = createLabelTrue comparator in
+      let labelFalse = createLabelFalse comparator in
+      b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
 #if !defined(__GLASGOW_HASKELL__)

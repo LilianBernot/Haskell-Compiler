@@ -116,14 +116,10 @@ BooleanComparison : true and true { true_bool }
 
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { 
-      let labelTrue = createLabelTrue $2 in
-      let labelFalse = createLabelFalse $2 in
-      ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 labelTrue labelFalse
+      ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 $2
       }
     | Expr superior Expr { 
-      let labelTrue = createLabelTrue $2 in
-      let labelFalse = createLabelFalse $2 in
-      ";/ Compare Superior Condition\n" ++ compareInf $3 $1 labelTrue labelFalse
+      ";/ Compare Superior Condition\n" ++ compareInf $3 $1 $2
     }
 
 Expr : Term  { $1 } 
@@ -196,8 +192,21 @@ bez label = "\tBEZ\t" ++ label ++ "\n"
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
 
-compareInf :: String -> String -> String -> String -> String
-compareInf a b labelIf labelElse = b ++ a ++ substract ++ bgz labelIf ++ push "0" ++ push labelElse ++ goto ++ labelIf ++ equ ++ push "1" ++ labelElse ++ equ
+-- | Compares two strings (a and b) based on a provided comparator token.
+-- 
+--   Parameters:
+--     a          - The first string to compare.
+--     b          - The second string to compare.
+--     comparator - A token representing the comparison operator to create the labels.
+-- 
+--   Returns:
+--     A string that contains a sequence of instructions generated 
+--     based on the result of comparing `a` and `b` using the `comparator`.
+compareInf :: String -> String -> Token -> String
+compareInf a b comparator = 
+      let labelTrue = createLabelTrue comparator in
+      let labelFalse = createLabelFalse comparator in
+      b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ
 }
 
 
