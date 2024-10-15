@@ -121,6 +121,16 @@ Comparison : Expr inferior Expr {
     | Expr superior Expr { 
       ";/ Compare Superior Condition\n" ++ compareInf $3 $1 $2
     }
+    | Expr inferior_or_equal Expr { 
+      let b = $3 ++ push "1" ++ add in
+      ";/ Compare Inferior Or Equal Condition\n" ++ compareInf $1 b $2
+      -- a <= b <=> a < b+1
+    }
+    | Expr superior_or_equal Expr { 
+      let a = $1 ++ push "1" ++ add in
+      ";/ Compare Superior Or Equal Condition\n" ++ compareInf $3 a $2
+      -- a >= b <=> a+1 > b 
+    }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
