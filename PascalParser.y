@@ -123,6 +123,7 @@ Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr superior_or_equal Expr { % greaterThan $1 $3 "1" }
   | Expr compare_equal Expr { % compareEqual $1 $3 }
   | Expr compare_different Expr { % compareDifferent $1 $3 }
+  | Expr and Expr { $1 ++ $3 ++ "\tAND\n" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
