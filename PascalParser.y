@@ -177,8 +177,8 @@ equ = "\tEQU\t*\n"
 store = "\tSTORE\n"
 out = "\tOUT\n"
 load = "\tLOAD\n"
-false_bool = push "1"
-true_bool = push "0" 
+false_bool = push "0"
+true_bool = push "1" 
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
