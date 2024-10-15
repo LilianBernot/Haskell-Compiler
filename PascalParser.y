@@ -178,12 +178,6 @@ load = "\tLOAD\n"
 false_bool = push "1"
 true_bool = push "0" 
 
-createLabelTrue :: Token -> String
-createLabelTrue token = "labelTrue" ++ show(getTLine token) ++ "Col" ++ show(getTCol token)
-
-createLabelFalse :: Token -> String
-createLabelFalse token = "labelFalse" ++ show(getTLine token) ++ "Col" ++ show(getTCol token)
-
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
 
@@ -192,9 +186,6 @@ affectVariableValue name value = push name ++ value ++ store
 
 getArrayElementFromIndex :: String -> String -> String
 getArrayElementFromIndex array_name index = push array_name ++ index ++ add
-
-bez :: String -> String
-bez label = "\tBEZ\t" ++ label ++ "\n"
 
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
