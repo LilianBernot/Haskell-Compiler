@@ -124,6 +124,7 @@ Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr compare_equal Expr { % compareEqual $1 $3 }
   | Expr compare_different Expr { % compareDifferent $1 $3 }
   | Expr and Expr { $1 ++ $3 ++ "\tAND\n" }
+  | Expr or Expr { $1 ++ $3 ++ "\tOR\n" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
