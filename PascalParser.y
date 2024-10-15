@@ -118,23 +118,23 @@ BooleanComparison : true and true { true_bool }
 
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { 
-      % compareInf $1 $3
+      % lowerThan $1 $3
       }
 
 -- Comparison : Expr inferior Expr { 
---       ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 $2
+--       ";/ Compare Inferior Condition\n" ++ lowerThan $1 $3 $2
 --       }
 --     | Expr superior Expr { 
---       ";/ Compare Superior Condition\n" ++ compareInf $3 $1 $2
+--       ";/ Compare Superior Condition\n" ++ lowerThan $3 $1 $2
 --     }
 --     | Expr inferior_or_equal Expr { 
 --       let b = $3 ++ push "1" ++ add in
---       ";/ Compare Inferior Or Equal Condition\n" ++ compareInf $1 b $2
+--       ";/ Compare Inferior Or Equal Condition\n" ++ lowerThan $1 b $2
 --       -- a <= b <=> a < b+1
 --     }
 --     | Expr superior_or_equal Expr { 
 --       let a = $1 ++ push "1" ++ add in
---       ";/ Compare Superior Or Equal Condition\n" ++ compareInf $3 a $2
+--       ";/ Compare Superior Or Equal Condition\n" ++ lowerThan $3 a $2
 --       -- a >= b <=> a+1 > b 
 --     }
 
@@ -225,8 +225,8 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
-compareInf :: String -> String -> ParseResult String
-compareInf a b = do
+lowerThan :: String -> String -> ParseResult String
+lowerThan a b = do
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)

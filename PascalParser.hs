@@ -491,7 +491,7 @@ happyReduction_35 ((HappyAbsSyn15  happy_var_3) `HappyStk`
         _ `HappyStk`
         (HappyAbsSyn15  happy_var_1) `HappyStk`
         happyRest) tk
-         = happyThen ((( compareInf happy_var_1 happy_var_3))
+         = happyThen ((( lowerThan happy_var_1 happy_var_3))
         ) (\r -> happyReturn (HappyAbsSyn14 r))
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -760,8 +760,8 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
-compareInf :: String -> String -> ParseResult String
-compareInf a b = do
+lowerThan :: String -> String -> ParseResult String
+lowerThan a b = do
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)
