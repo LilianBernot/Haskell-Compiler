@@ -114,25 +114,12 @@ BooleanComparison : true and true { true_bool }
   | not true { false_bool}
   | not false { true_bool }
 
--- False is > 0, so 0 = true
-Comparison : BooleanComparison { $1 }
-  | Expr superior Expr { 
-    $3 ++ push "1" ++ add ++ $1 ++ substract 
-    -- we want a > b <=> a >= b+1 <=> b+1 - a <= 0
-    } 
-  | Expr inferior Expr { $1 ++ push "1" ++ $3 ++ add ++ substract }
-  | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
-  | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
-  | Expr compare_equal Expr { 
-    -- a >=b and a <= b
-    $3 ++ $1 ++ substract 
-    ++ $1 ++ $3 ++ substract 
-    ++ "\tAND\n" }
-  | Expr compare_different Expr { 
-      -- a > b or b > a
-      $3 ++ push "1" ++ add ++ $1 ++ substract ++
-      $1 ++ push "1" ++ add ++ $3 ++ substract ++
-      "\tOR\n" }
+-- False = 0, True = 1
+Comparison : Expr inferior Expr { 
+      let labelTrue = "labelTrue" ++ show(getTLine $2) ++ "Col" ++ show(getTCol $2) in
+      let labelFalse = "labelFalse" ++ show(getTLine $2) ++ "Col" ++ show(getTCol $2) in
+      ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 labelTrue labelFalse
+      }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
@@ -197,6 +184,9 @@ bez label = "\tBEZ\t" ++ label ++ "\n"
 
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
+
+compareInf :: String -> String -> String -> String -> String
+compareInf a b labelIf labelElse = b ++ a ++ substract ++ bgz labelIf ++ push "0" ++ push labelElse ++ goto ++ labelIf ++ equ ++ push "1" ++ labelElse ++ equ
 }
 
 
