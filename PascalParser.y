@@ -109,17 +109,6 @@ VariableNames : varname {declareVariable $1}
 Boolean : false { false_bool }
   | true { true_bool }
 
-BooleanComparison : true and true { true_bool }
-  | true and false { false_bool}
-  | false and true { false_bool}
-  | false and false { false_bool}
-  | true or true { true_bool }
-  | true or false { true_bool }
-  | false or true { true_bool }
-  | false or false { false_bool}
-  | not true { false_bool}
-  | not false { true_bool }
-
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr inferior_or_equal Expr { % lowerThan $1 $3 "1" }
@@ -151,13 +140,6 @@ Factor : integer { push (show $1)}
   | varname { push $1 ++ load }
 
 {
-
-{-
- Un type "stupide" -- ParseResult String est un synonyme de String.
-    On a envie de remplacer "ParseResult a" par "a" directement,
-    mais nous l'étendrons par la suite (questions 12 et suivantes)
--}
-
 data Etat = Etat {counter :: Integer} deriving (Eq, Show)
 type ParseResult a = State Etat a
 -- We change the ParseResult and it does not care as we declare the parser as monadic
