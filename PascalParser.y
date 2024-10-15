@@ -117,9 +117,8 @@ BooleanComparison : true and true { true_bool }
   | not false { true_bool }
 
 -- False = 0, True = 1
-Comparison : Expr inferior Expr { 
-      % lowerThan $1 $3
-      }
+Comparison : Expr inferior Expr { % lowerThan $1 $3 }
+  | Expr superior Expr { % greaterThan $1 $3 }
 
 -- Comparison : Expr inferior Expr { 
 --       ";/ Compare Inferior Condition\n" ++ lowerThan $1 $3 $2
@@ -225,6 +224,12 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
+
+greaterThan :: String -> String -> ParseResult String
+greaterThan a b = do
+  s <- lowerThan b a
+  return s
+
 lowerThan :: String -> String -> ParseResult String
 lowerThan a b = do
   s <- get
