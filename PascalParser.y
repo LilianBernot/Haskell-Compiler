@@ -119,24 +119,8 @@ BooleanComparison : true and true { true_bool }
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr inferior_or_equal Expr { % lowerThan $1 $3 "1" }
-  -- | Expr superior Expr { % greaterThan $1 $3 1 }
-
--- Comparison : Expr inferior Expr { 
---       ";/ Compare Inferior Condition\n" ++ lowerThan $1 $3 $2
---       }
---     | Expr superior Expr { 
---       ";/ Compare Superior Condition\n" ++ lowerThan $3 $1 $2
---     }
---     | Expr inferior_or_equal Expr { 
---       let b = $3 ++ push "1" ++ add in
---       ";/ Compare Inferior Or Equal Condition\n" ++ lowerThan $1 b $2
---       -- a <= b <=> a < b+1
---     }
---     | Expr superior_or_equal Expr { 
---       let a = $1 ++ push "1" ++ add in
---       ";/ Compare Superior Or Equal Condition\n" ++ lowerThan $3 a $2
---       -- a >= b <=> a+1 > b 
---     }
+  | Expr superior Expr { % greaterThan $1 $3 "0" }
+  | Expr superior_or_equal Expr { % greaterThan $1 $3 "1" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
@@ -215,25 +199,14 @@ bez label = "\tBEZ\t" ++ label ++ "\n"
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
 
--- | Compares two strings (a and b) based on a provided comparator token.
--- 
---   Parameters:
---     a          - The first string to compare.
---     b          - The second string to compare.
---     comparator - A token representing the comparison operator to create the labels.
--- 
---   Returns:
---     A string that contains a sequence of instructions generated 
---     based on the result of comparing `a` and `b` using the `comparator`.
-
--- greaterThan :: String -> String -> ParseResult String
--- greaterThan a b = do
---   s <- lowerThan b a
---   return s
+greaterThan :: String -> String -> String -> ParseResult String
+greaterThan a b or_equal = do
+  s <- lowerThan b a or_equal
+  return s
 
 lowerThan :: String -> String -> String -> ParseResult String
 lowerThan a b or_equal = do
-  -- or_equal : "1" if <=
+  -- or_equal : "1" if <= if strict, "0"
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)
