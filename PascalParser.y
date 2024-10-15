@@ -122,6 +122,7 @@ Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr superior Expr { % greaterThan $1 $3 "0" }
   | Expr superior_or_equal Expr { % greaterThan $1 $3 "1" }
   | Expr compare_equal Expr { % compareEqual $1 $3 }
+  | Expr compare_different Expr { % compareDifferent $1 $3 }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
@@ -190,6 +191,12 @@ getArrayElementFromIndex array_name index = push array_name ++ index ++ add
 
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
+
+compareDifferent :: String -> String -> ParseResult String
+compareDifferent a b = do
+  lower <- lowerThan a b "0"
+  greater <- greaterThan a b "0"
+  return (lower ++ greater ++ "\tOR\n")
 
 compareEqual :: String -> String -> ParseResult String
 compareEqual a b = do
