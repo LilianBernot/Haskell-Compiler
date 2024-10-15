@@ -117,8 +117,9 @@ BooleanComparison : true and true { true_bool }
   | not false { true_bool }
 
 -- False = 0, True = 1
-Comparison : Expr inferior Expr { % lowerThan $1 $3 }
-  | Expr superior Expr { % greaterThan $1 $3 }
+Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
+  | Expr inferior_or_equal Expr { % lowerThan $1 $3 "1" }
+  -- | Expr superior Expr { % greaterThan $1 $3 1 }
 
 -- Comparison : Expr inferior Expr { 
 --       ";/ Compare Inferior Condition\n" ++ lowerThan $1 $3 $2
@@ -225,20 +226,21 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
 
-greaterThan :: String -> String -> ParseResult String
-greaterThan a b = do
-  s <- lowerThan b a
-  return s
+-- greaterThan :: String -> String -> ParseResult String
+-- greaterThan a b = do
+--   s <- lowerThan b a
+--   return s
 
-lowerThan :: String -> String -> ParseResult String
-lowerThan a b = do
+lowerThan :: String -> String -> String -> ParseResult String
+lowerThan a b or_equal = do
+  -- or_equal : "1" if <=
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)
+  let b_value = b ++ push or_equal ++ add
       s' = incrCounter s
   put s'
-  return ( ";/ Compare Condition\n" ++ b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
-
+  return ( ";/ Compare Condition\n" ++ b_value ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
 }
 
 
