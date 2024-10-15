@@ -47,6 +47,7 @@ import Control.Monad.State.Lazy
   true {TK _ TRUE}
   false {TK _ FALSE}
   exit {TK _ EXIT}
+  def {TK _ DEF}
   superior_or_equal {TK _ SUPERIROROREQUAL}
   superior {TK _ SUPERIROR}
   inferior_or_equal {TK _ INFERIOROREQUAL}
@@ -65,6 +66,7 @@ Linst : Inst {$1}
 Inst : Print ';' {$1}
   | ';' { "" }
   | SystemCall { $1 }
+  | FunctionDeclarationCall { $1 }
   | open_multiline_comment Linst close_multiline_comment { "" }
   | VariableDeclaration {$1}
   | input varname { push $2 ++ "\tIN\n" ++ store}
@@ -105,6 +107,25 @@ VariableDeclaration : var VariableNames {$2}
 VariableNames : varname {declareVariable $1}
   | varname comma VariableNames { declareVariable $1 ++ $3}
   -- TODO : this is only "initialization" of variables -> add declaration with values
+
+FunctionDeclarationCall : def varname lpar rpar lcb Linst rcb {
+  let labelEnd = labelEndFunction $2 in 
+  let labelRun = labelRunFunction $2 in
+  push labelEnd ++ goto ++ labelRun ++ equ ++ $6 ++ goto ++ labelEnd ++ equ
+  -- GOTO LabelEndFunction
+  -- LabelRunFunc
+  -- ListInst
+  -- GOTO (top element in stack will be created by function caller)
+  -- LabelEndFunc
+}
+  | varname lpar rpar { 
+    let labelCall = labelCallFunction $2 in
+    let labelRun = labelRunFunction $1 in
+    push labelCall ++ push labelRun ++ goto ++ labelCall ++ equ 
+    -- PUSH LabelCallFunc 
+    -- PUSH LabelRUN + GOTO 
+    -- LabelCallFunc
+}
 
 Boolean : false { false_bool }
   | true { true_bool }
@@ -186,6 +207,15 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 
 bez :: String -> String
 bez label = "\tBEZ\t" ++ label ++ "\n"
+
+labelCallFunction :: Token -> String
+labelCallFunction token = "labelCallFunction_Line" ++ show(getTLine token) ++ "Col" ++ show(getTCol token) 
+
+labelRunFunction :: String -> String
+labelRunFunction name = "labelRunFunction_" ++ name
+
+labelEndFunction :: String -> String
+labelEndFunction name = "labelEndFunction_" ++ name
 
 compareDifferent :: String -> String -> ParseResult String
 compareDifferent a b = do

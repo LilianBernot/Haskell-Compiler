@@ -41,6 +41,7 @@ tokens :-
   <0> true {\p _ -> TK p TRUE}
   <0> false {\p _ -> TK p FALSE}
   <0> exit {\p _ -> TK p EXIT}
+  <0> def {\p _ -> TK p DEF}
   <0> \{ {\p _ -> TK p LEFTCURLYBRACKET}
   <0> \} {\p _ -> TK p RIGHTCURLYBRACKET}
   <0> \[ {\p _ -> TK p LEFTSQUAREDBRACKET}
@@ -85,6 +86,7 @@ data TokenName
   | TRUE 
   | FALSE
   | EXIT
+  | DEF
   | SUPERIROROREQUAL
   | SUPERIROR
   | INFERIOROREQUAL
