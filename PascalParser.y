@@ -125,6 +125,10 @@ Comparison : Expr inferior Expr { % lowerThan $1 $3 "0" }
   | Expr compare_different Expr { % compareDifferent $1 $3 }
   | Expr and Expr { $1 ++ $3 ++ "\tAND\n" }
   | Expr or Expr { $1 ++ $3 ++ "\tOR\n" }
+  | not Expr { push "1" ++ $2 ++ substract 
+    -- 1 - number -> only not 1 is False 
+    -- not is really bad when comparing none booleans
+  }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
