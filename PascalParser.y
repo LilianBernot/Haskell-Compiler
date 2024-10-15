@@ -1,15 +1,17 @@
 {
-module PascalParser(parseProgram,ParseResult)
+module PascalParser(parseProgram,ParseResult,initEtat)
 
 where
 
 import PascaLex
+import Control.Monad.State.Lazy
 
 }
 
 %name parse
 %tokentype { Token }
 %error { parseError }
+%monad {ParseResult}
 
 %token
   print {TK _ PRINT}
@@ -116,21 +118,25 @@ BooleanComparison : true and true { true_bool }
 
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { 
-      ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 $2
+      % compareInf $1 $3 $2
       }
-    | Expr superior Expr { 
-      ";/ Compare Superior Condition\n" ++ compareInf $3 $1 $2
-    }
-    | Expr inferior_or_equal Expr { 
-      let b = $3 ++ push "1" ++ add in
-      ";/ Compare Inferior Or Equal Condition\n" ++ compareInf $1 b $2
-      -- a <= b <=> a < b+1
-    }
-    | Expr superior_or_equal Expr { 
-      let a = $1 ++ push "1" ++ add in
-      ";/ Compare Superior Or Equal Condition\n" ++ compareInf $3 a $2
-      -- a >= b <=> a+1 > b 
-    }
+
+-- Comparison : Expr inferior Expr { 
+--       ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 $2
+--       }
+--     | Expr superior Expr { 
+--       ";/ Compare Superior Condition\n" ++ compareInf $3 $1 $2
+--     }
+--     | Expr inferior_or_equal Expr { 
+--       let b = $3 ++ push "1" ++ add in
+--       ";/ Compare Inferior Or Equal Condition\n" ++ compareInf $1 b $2
+--       -- a <= b <=> a < b+1
+--     }
+--     | Expr superior_or_equal Expr { 
+--       let a = $1 ++ push "1" ++ add in
+--       ";/ Compare Superior Or Equal Condition\n" ++ compareInf $3 a $2
+--       -- a >= b <=> a+1 > b 
+--     }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
@@ -155,8 +161,15 @@ Factor : integer { push (show $1)}
     On a envie de remplacer "ParseResult a" par "a" directement,
     mais nous l'étendrons par la suite (questions 12 et suivantes)
 -}
-  
-type ParseResult a = a
+
+data Etat = Etat {counter :: Integer} deriving (Eq, Show)
+type ParseResult a = State Etat a
+-- We change the ParseResult and it does not care as we declare the parser as monadic
+
+incrCounter :: Etat -> Etat
+incrCounter s = Etat {counter = (counter s) + 1}
+initEtat :: Etat
+initEtat = Etat 0
 
 parseProgram :: String -> ParseResult String
 parseProgram = parse . scanTokens
@@ -212,11 +225,15 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
-compareInf :: String -> String -> Token -> String
-compareInf a b comparator = 
-      let labelTrue = createLabelTrue comparator in
-      let labelFalse = createLabelFalse comparator in
-      b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ
+compareInf :: String -> String -> Token -> ParseResult String
+compareInf a b c = do
+  s <- get
+  let labelTrue = "labelTrue_" ++ show (counter s)
+  let labelFalse = "labelFalse_" ++ show (counter s)
+      s' = incrCounter s
+  put s'
+  return (b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
+
 }
 
 
