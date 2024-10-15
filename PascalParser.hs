@@ -490,8 +490,9 @@ happyReduction_35 (HappyAbsSyn15  happy_var_3)
         (HappyTerminal happy_var_2)
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
-                 (let labelTrue = "labelTrue" ++ show(getTLine happy_var_2) ++ "Col" ++ show(getTCol happy_var_2) in
-      let labelFalse = "labelFalse" ++ show(getTLine happy_var_2) ++ "Col" ++ show(getTCol happy_var_2) in
+                 (-- let labelTrue = "labelTrue" ++ show(getTLine happy_var_2) ++ "Col" ++ show(getTCol happy_var_2) in
+      let labelTrue = createLabelTrue happy_var_2 in
+      let labelFalse = createLabelFalse happy_var_2 in
       ";/ Compare Inferior Condition\n" ++ compareInf happy_var_1 happy_var_3 labelTrue labelFalse
         )
 happyReduction_35 _ _ _  = notHappyAtAll 
@@ -737,6 +738,12 @@ out = "\tOUT\n"
 load = "\tLOAD\n"
 false_bool = push "1"
 true_bool = push "0" 
+
+createLabelTrue :: Token -> String
+createLabelTrue token = "labelTrue" ++ show(getTLine token) ++ "Col" ++ show(getTCol token)
+
+createLabelFalse :: Token -> String
+createLabelFalse token = "labelFalse" ++ show(getTLine token) ++ "Col" ++ show(getTCol token)
 
 declareVariable :: String -> String
 declareVariable name = name ++"\tDS\t1\n"
