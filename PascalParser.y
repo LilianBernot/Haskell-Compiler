@@ -48,6 +48,7 @@ import Control.Monad.State.Lazy
   false {TK _ FALSE}
   exit {TK _ EXIT}
   def {TK _ DEF}
+  return {TK _ RETURN}
   superior_or_equal {TK _ SUPERIROROREQUAL}
   superior {TK _ SUPERIROR}
   inferior_or_equal {TK _ INFERIOROREQUAL}
@@ -66,7 +67,8 @@ Linst : Inst {$1}
 Inst : Print ';' {$1}
   | ';' { "" }
   | SystemCall { $1 }
-  | FunctionDeclarationCall { $1 }
+  | FunctionDeclaration { $1 }
+  | FunctionCall { $1 }
   | open_multiline_comment Linst close_multiline_comment { "" }
   | VariableDeclaration {$1}
   | input varname { push $2 ++ "\tIN\n" ++ store}
@@ -108,17 +110,18 @@ VariableNames : varname {declareVariable $1}
   | varname comma VariableNames { declareVariable $1 ++ $3}
   -- TODO : this is only "initialization" of variables -> add declaration with values
 
-FunctionDeclarationCall : def varname lpar rpar lcb Linst rcb {
+FunctionDeclaration : def varname lpar rpar lcb FunctionListInst rcb {
   let labelEnd = labelEndFunction $2 in 
   let labelRun = labelRunFunction $2 in
-  push labelEnd ++ goto ++ labelRun ++ equ ++ $6 ++ goto ++ labelEnd ++ equ
+  push labelEnd ++ goto ++ labelRun ++ equ ++ $6 ++ swap ++ goto ++ labelEnd ++ equ
   -- GOTO LabelEndFunction
   -- LabelRunFunc
   -- ListInst
   -- GOTO (top element in stack will be created by function caller)
   -- LabelEndFunc
 }
-  | varname lpar rpar { 
+
+FunctionCall : varname lpar rpar { 
     let labelCall = labelCallFunction $2 in
     let labelRun = labelRunFunction $1 in
     push labelCall ++ push labelRun ++ goto ++ labelCall ++ equ 
@@ -126,6 +129,11 @@ FunctionDeclarationCall : def varname lpar rpar lcb Linst rcb {
     -- PUSH LabelRUN + GOTO 
     -- LabelCallFunc
 }
+
+FunctionListInst : Inst FunctionListInst { $1 ++ $2 }
+  | return Expr ';' { $2 }
+  -- for the return, we push the value and then do a SWAP
+
 
 Boolean : false { false_bool }
   | true { true_bool }
@@ -151,6 +159,7 @@ Expr : Term  { $1 }
   | Expr plus Expr  { $1 ++ $3 ++ add } 
   | Expr sub Expr  { $1 ++ $3 ++ substract } 
   | Expr mod Expr { $1 ++ $1 ++ $3 ++ divide ++ $3 ++ multiply ++ substract }
+  | FunctionCall { $1 }
 
 Term : Factor  { $1 } 
   | Term mul Factor  { $1 ++ $3 ++ multiply } 
@@ -190,6 +199,7 @@ equ = "\tEQU\t*\n"
 store = "\tSTORE\n"
 out = "\tOUT\n"
 load = "\tLOAD\n"
+swap = "\tSWAP\n"
 false_bool = push "0"
 true_bool = push "1" 
 
