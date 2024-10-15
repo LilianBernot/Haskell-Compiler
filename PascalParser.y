@@ -116,11 +116,15 @@ BooleanComparison : true and true { true_bool }
 
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { 
-      -- let labelTrue = "labelTrue" ++ show(getTLine $2) ++ "Col" ++ show(getTCol $2) in
       let labelTrue = createLabelTrue $2 in
       let labelFalse = createLabelFalse $2 in
       ";/ Compare Inferior Condition\n" ++ compareInf $1 $3 labelTrue labelFalse
       }
+    | Expr superior Expr { 
+      let labelTrue = createLabelTrue $2 in
+      let labelFalse = createLabelFalse $2 in
+      ";/ Compare Superior Condition\n" ++ compareInf $3 $1 labelTrue labelFalse
+    }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }
