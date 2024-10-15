@@ -80,7 +80,7 @@ SystemCall : exit lpar Expr rpar { $3 ++ "\tSTOP\n"}
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
   let labelEndWhile = "labelEndWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-  ";/ While Loop\n" ++ labelStartWhile ++ equ ++ $2 ++ bgz labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
+  ";/ While Loop\n" ++ labelStartWhile ++ equ ++ $2 ++ bez labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
 }
 
 -- For comparison we use BGZ, which, if the last elemen in the pile is > 0, we jump to else statement
@@ -89,11 +89,11 @@ IfStatement :
   if Expr lcb Linst rcb else lcb Linst rcb { 
     let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
     let labelElse = "labelElse" ++ show(getTLine $6) ++ "Col" ++ show(getTCol $6) in
-    ";/ If Then Else Condition\n" ++ $2 ++ bgz labelElse ++ $4 ++ push labelIf ++ goto ++ labelElse ++ equ ++ $8 ++ labelIf ++ equ 
+    ";/ If Then Else Condition\n" ++ $2 ++ bez labelIf ++ $4 ++ push labelElse ++ goto ++ labelIf ++ equ ++ $8 ++ labelElse ++ equ 
   }
   | if Expr lcb Linst rcb { 
       let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
-      ";/ If Then Condition\n" ++ $2 ++ bgz labelIf ++ $4 ++ labelIf ++ equ 
+      ";/ If Then Condition\n" ++ $2 ++ bez labelIf ++ $4 ++ labelIf ++ equ 
     }
 
 VariableDeclaration : var VariableNames {$2}
@@ -183,6 +183,9 @@ getArrayElementFromIndex array_name index = push array_name ++ index ++ add
 
 bgz :: String -> String
 bgz label = "\tBGZ\t" ++ label ++ "\n"
+
+bez :: String -> String
+bez label = "\tBEZ\t" ++ label ++ "\n"
 
 compareDifferent :: String -> String -> ParseResult String
 compareDifferent a b = do
