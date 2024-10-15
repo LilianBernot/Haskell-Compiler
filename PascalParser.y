@@ -46,6 +46,7 @@ import Control.Monad.State.Lazy
   not {TK _ NOT}
   true {TK _ TRUE}
   false {TK _ FALSE}
+  exit {TK _ EXIT}
   superior_or_equal {TK _ SUPERIROROREQUAL}
   superior {TK _ SUPERIROR}
   inferior_or_equal {TK _ INFERIOROREQUAL}
@@ -63,6 +64,7 @@ Linst : Inst {$1}
 
 Inst : Print ';' {$1}
   | ';' { "" }
+  | SystemCall { $1 }
   | open_multiline_comment Linst close_multiline_comment { "" }
   | VariableDeclaration {$1}
   | input varname { push $2 ++ "\tIN\n" ++ store}
@@ -72,6 +74,8 @@ Inst : Print ';' {$1}
 
 Print : print Expr {";/ print...\n" ++ $2 ++ out}
   | print varname lsb Expr rsb {";/ print...\n" ++ getArrayElementFromIndex $2 $4 ++ load ++ out}
+
+SystemCall : exit lpar Expr rpar { $3 ++ "\tSTOP\n"}
 
 WhileStatement : while Expr lcb Linst rcb {
   let labelStartWhile = "labelStartWhile" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in

@@ -40,6 +40,7 @@ tokens :-
   <0> not {\p _ -> TK p NOT}
   <0> true {\p _ -> TK p TRUE}
   <0> false {\p _ -> TK p FALSE}
+  <0> exit {\p _ -> TK p EXIT}
   <0> \{ {\p _ -> TK p LEFTCURLYBRACKET}
   <0> \} {\p _ -> TK p RIGHTCURLYBRACKET}
   <0> \[ {\p _ -> TK p LEFTSQUAREDBRACKET}
@@ -83,6 +84,7 @@ data TokenName
   | NOT 
   | TRUE 
   | FALSE
+  | EXIT
   | SUPERIROROREQUAL
   | SUPERIROR
   | INFERIOROREQUAL
