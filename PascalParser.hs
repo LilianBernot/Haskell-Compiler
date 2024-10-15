@@ -505,7 +505,8 @@ happyReduction_36 (HappyAbsSyn15  happy_var_3)
         _
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
-                 (push "1\n" ++ substract ++ happy_var_3 ++ happy_var_1 ++ substract
+                 (happy_var_3 ++ push "1" ++ add ++ happy_var_1 ++ substract 
+    -- we want a > b <=> a >= b+1 <=> b+1 - a <= 0
         )
 happyReduction_36 _ _ _  = notHappyAtAll 
 
@@ -516,7 +517,7 @@ happyReduction_37 (HappyAbsSyn15  happy_var_3)
         _
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
-                 (happy_var_1 ++ push "1\n" ++ add ++ happy_var_3 ++ substract
+                 (happy_var_1 ++ push "1" ++ happy_var_3 ++ add ++ substract
         )
 happyReduction_37 _ _ _  = notHappyAtAll 
 
@@ -564,8 +565,8 @@ happyReduction_41 (HappyAbsSyn15  happy_var_3)
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
                  (-- a > b or b > a
-      push "1\n" ++ substract ++ happy_var_3 ++ happy_var_1 ++ substract 
-      ++ happy_var_1 ++ push "1\n" ++ add ++ happy_var_3 ++ substract 
+      push "1" ++ substract ++ happy_var_3 ++ happy_var_1 ++ substract 
+      ++ happy_var_1 ++ push "1" ++ add ++ happy_var_3 ++ substract 
       ++ "\tOR\n"
         )
 happyReduction_41 _ _ _  = notHappyAtAll 

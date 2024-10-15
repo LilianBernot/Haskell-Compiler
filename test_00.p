@@ -98,8 +98,21 @@ if (4 >= 3){
     print 10000;
 }
 --}
-
-print true;
+{--
+print 67 > 65;
+print 67 > 68;
+print 67 > 67;
+print 67 > 66;
+print 67 < 68;
+print 67 < 67;
+print 67 < 66;
+print 67 >= 68;
+print 67 >= 67;
+print 67 >= 66;
+print 67 <= 68;
+print 67 <= 67;
+print 67 <= 66;
+--}
 {--
 print true and true;
 print true and false;
@@ -107,5 +120,7 @@ print true or false;
 --}
 print 67 == 67;
 print 67 == 98928;
+{--
 print 67 != 67;
 print 67 != 98928;
+--}

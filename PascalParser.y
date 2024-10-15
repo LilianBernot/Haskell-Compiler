@@ -77,6 +77,8 @@ WhileStatement : while Expr lcb Linst rcb {
   ";/ While Loop\n" ++ labelStartWhile ++ equ ++ $2 ++ bgz labelEndWhile ++ $4 ++ push labelStartWhile ++ goto ++ labelEndWhile ++ equ
 }
 
+-- For comparison we use BGZ, which, if the last elemen in the pile is > 0, we jump to else statement
+-- So 
 IfStatement : 
   if Expr lcb Linst rcb else lcb Linst rcb { 
     let labelIf = "labelIf" ++ show(getTLine $1) ++ "Col" ++ show(getTCol $1) in
@@ -112,9 +114,13 @@ BooleanComparison : true and true { true_bool }
   | not true { false_bool}
   | not false { true_bool }
 
+-- False is > 0, so 0 = true
 Comparison : BooleanComparison { $1 }
-  | Expr superior Expr { push "1\n" ++ substract ++ $3 ++ $1 ++ substract } -- we want a > b so for compiler, a - b < 0
-  | Expr inferior Expr { $1 ++ push "1\n" ++ add ++ $3 ++ substract }
+  | Expr superior Expr { 
+    $3 ++ push "1" ++ add ++ $1 ++ substract 
+    -- we want a > b <=> a >= b+1 <=> b+1 - a <= 0
+    } 
+  | Expr inferior Expr { $1 ++ push "1" ++ $3 ++ add ++ substract }
   | Expr superior_or_equal Expr { $3 ++ $1 ++ substract }
   | Expr inferior_or_equal Expr { $1 ++ $3 ++ substract }
   | Expr compare_equal Expr { 
@@ -124,8 +130,8 @@ Comparison : BooleanComparison { $1 }
     ++ "\tAND\n" }
   | Expr compare_different Expr { 
       -- a > b or b > a
-      push "1\n" ++ substract ++ $3 ++ $1 ++ substract 
-      ++ $1 ++ push "1\n" ++ add ++ $3 ++ substract 
+      push "1" ++ substract ++ $3 ++ $1 ++ substract 
+      ++ $1 ++ push "1" ++ add ++ $3 ++ substract 
       ++ "\tOR\n" }
 
 Expr : Term  { $1 } 
