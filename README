@@ -1,3 +1,0 @@
-sh> make compile
-sh> make test_00.ex
-sh> make clean 
