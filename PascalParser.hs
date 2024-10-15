@@ -488,10 +488,10 @@ happyReduction_34 _
 #endif
 happyReduce_35 = happyMonadReduce 3# 10# happyReduction_35
 happyReduction_35 ((HappyAbsSyn15  happy_var_3) `HappyStk`
-        (HappyTerminal happy_var_2) `HappyStk`
+        _ `HappyStk`
         (HappyAbsSyn15  happy_var_1) `HappyStk`
         happyRest) tk
-         = happyThen ((( compareInf happy_var_1 happy_var_3 happy_var_2))
+         = happyThen ((( compareInf happy_var_1 happy_var_3))
         ) (\r -> happyReturn (HappyAbsSyn14 r))
 
 #if __GLASGOW_HASKELL__ >= 710
@@ -760,14 +760,14 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
-compareInf :: String -> String -> Token -> ParseResult String
-compareInf a b c = do
+compareInf :: String -> String -> ParseResult String
+compareInf a b = do
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)
       s' = incrCounter s
   put s'
-  return (b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
+  return ( ";/ Compare Condition\n" ++ b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 
 #if !defined(__GLASGOW_HASKELL__)

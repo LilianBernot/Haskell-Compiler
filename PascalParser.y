@@ -118,7 +118,7 @@ BooleanComparison : true and true { true_bool }
 
 -- False = 0, True = 1
 Comparison : Expr inferior Expr { 
-      % compareInf $1 $3 $2
+      % compareInf $1 $3
       }
 
 -- Comparison : Expr inferior Expr { 
@@ -225,14 +225,14 @@ bgz label = "\tBGZ\t" ++ label ++ "\n"
 --   Returns:
 --     A string that contains a sequence of instructions generated 
 --     based on the result of comparing `a` and `b` using the `comparator`.
-compareInf :: String -> String -> Token -> ParseResult String
-compareInf a b c = do
+compareInf :: String -> String -> ParseResult String
+compareInf a b = do
   s <- get
   let labelTrue = "labelTrue_" ++ show (counter s)
   let labelFalse = "labelFalse_" ++ show (counter s)
       s' = incrCounter s
   put s'
-  return (b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
+  return ( ";/ Compare Condition\n" ++ b ++ a ++ substract ++ bgz labelTrue ++ push "0" ++ push labelFalse ++ goto ++ labelTrue ++ equ ++ push "1" ++ labelFalse ++ equ)
 
 }
 
