@@ -130,9 +130,9 @@ Comparison : BooleanComparison { $1 }
     ++ "\tAND\n" }
   | Expr compare_different Expr { 
       -- a > b or b > a
-      push "1" ++ substract ++ $3 ++ $1 ++ substract 
-      ++ $1 ++ push "1" ++ add ++ $3 ++ substract 
-      ++ "\tOR\n" }
+      $3 ++ push "1" ++ add ++ $1 ++ substract ++
+      $1 ++ push "1" ++ add ++ $3 ++ substract ++
+      "\tOR\n" }
 
 Expr : Term  { $1 } 
   | Boolean { $1 }

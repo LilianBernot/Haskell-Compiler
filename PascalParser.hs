@@ -565,9 +565,9 @@ happyReduction_41 (HappyAbsSyn15  happy_var_3)
         (HappyAbsSyn15  happy_var_1)
          =  HappyAbsSyn14
                  (-- a > b or b > a
-      push "1" ++ substract ++ happy_var_3 ++ happy_var_1 ++ substract 
-      ++ happy_var_1 ++ push "1" ++ add ++ happy_var_3 ++ substract 
-      ++ "\tOR\n"
+      happy_var_3 ++ push "1" ++ add ++ happy_var_1 ++ substract ++
+      happy_var_1 ++ push "1" ++ add ++ happy_var_3 ++ substract ++
+      "\tOR\n"
         )
 happyReduction_41 _ _ _  = notHappyAtAll 
 

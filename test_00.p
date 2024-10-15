@@ -120,7 +120,5 @@ print true or false;
 --}
 print 67 == 67;
 print 67 == 98928;
-{--
 print 67 != 67;
 print 67 != 98928;
---}
